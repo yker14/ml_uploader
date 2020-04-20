@@ -1,0 +1,13 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+          xmlns:m="sap.m"
+          xmlns:t="sap.ui.table"
+          xmlns:f="sap.ui.layout.form"
+          xmlns:l="sap.ui.layout"
+          xmlns:core="sap.ui.core"
+          height="100%"
+          controllerName="rshub.ui.view.Publicacion">
+    <m:VBox>
+        <m:Title text="AQUI VA LA INFO COMPLETA DE LA PUBLICACION" width="100%"/>
+    </m:VBox>
+    
+</mvc:View>

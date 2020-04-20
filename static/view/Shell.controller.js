@@ -26,18 +26,18 @@ sap.ui.define([
 			return UIComponent.getRouterFor(this);
 		},
 
-		onNavBack: function () {
-			var oHistory, sPreviousHash;
+    onNavBack: function () {
+        var oHistory, sPreviousHash;
 
-			oHistory = History.getInstance();
-			sPreviousHash = oHistory.getPreviousHash();
+        oHistory = History.getInstance();
+        sPreviousHash = oHistory.getPreviousHash();
 
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-				this.getRouter().navTo("Homeview", {}, true /*leave no history for browser*/);
-			}
-		},
+        if (sPreviousHash !== undefined) {
+            window.history.go(-1);
+        } else {
+            this.getRouter().navTo("Homeview", {}, true /*leave no history for browser*/);
+        }
+    },
 
     onMenuItemSelect : function(ev) {
 			if (this.getOwnerComponent().getCurrentRoute() != ev.getParameter("item").getProperty("key")) {

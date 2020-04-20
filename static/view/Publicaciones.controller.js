@@ -5,8 +5,10 @@ sap.ui.define([
 	'sap/m/Popover',
 	'sap/m/Button',
 	'sap/m/library',
-    'sap/ui/core/Fragment'
-], function (Device, Controller, JSONModel, Popover, Button, mobileLibrary, Fragment) {
+    'sap/ui/core/Fragment',
+    'sap/ui/core/UIComponent',
+    'sap/m/library'
+], function (Device, Controller, JSONModel, Popover, Button, mobileLibrary, Fragment, UIComponent, sapMLib) {
 	"use strict";
 
 	var CController = Controller.extend("rshub.ui.view.Publicaciones", {
@@ -51,7 +53,15 @@ sap.ui.define([
 
         },
         
+        getRouter : function () {
+            return UIComponent.getRouterFor(this);
+        },
+
         onDetailViewPress: function() {
+
+            //this.getRouter().navTo("Publicacion", {"?publId": {id: "0"}});
+            sapMLib.URLHelper.redirect("#/publicacion/?id=0",true)
+/*
             var oView = this.getView(),
                 oController = this.getView().getController();
             
@@ -64,6 +74,7 @@ sap.ui.define([
                 oView.addDependent(oDialog);
                 oDialog.open();
             });
+*/
         },
         
         onDialogClose: function(ev) {

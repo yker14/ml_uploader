@@ -53,6 +53,11 @@
                 "pattern": "publicaciones",
                 "name": "Search",
                 "target": "search"
+                },
+                {
+                "pattern": "publicacion/{?publId}",
+                "name": "Publicacion",
+                "target": "publ"
                 }
             ],
 
@@ -66,6 +71,11 @@
                    "viewId": "search",
                    "viewName": "Publicaciones",
                    "viewLevel" : 2
+                },
+                "publ": {
+                   "viewId": "publ",
+                   "viewName": "Publicacion",
+                   "viewLevel" : 3
                 },
                 "notFound": {
                    "viewId": "notFound",
