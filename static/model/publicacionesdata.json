@@ -1,0 +1,29 @@
+[
+  {
+    "brand": "Artecma", 
+    "pictures":"images/Coj\u00ednErgon\u00f3micoNegro/Coj\u00ednErgon\u00f3micoNegro0",
+    "price": 117350, 
+    "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
+    "urlML": null, 
+    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "source":"Victors Secret"
+  }, 
+  {
+    "brand": "Artecma", 
+    "pictures":"images/Coj\u00ednErgon\u00f3micoNegro/Coj\u00ednErgon\u00f3micoNegro1",
+    "price": 117350, 
+    "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
+    "urlML": null, 
+    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "source":"Victors Secret"
+  },
+  {
+    "brand": "Artecma", 
+    "pictures":"./static/media/images/darksouls/darksouls.jpg",
+    "price": 117350, 
+    "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
+    "urlML": null, 
+    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "source":"Victors Secret"
+  }
+]

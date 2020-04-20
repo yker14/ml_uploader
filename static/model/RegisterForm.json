@@ -1,0 +1,54 @@
+{
+"idinventory" : [
+  {"id":"visitparkcheckbox","type":"checkbox"},
+  {"id":"terracebox","type":"checkbox"},
+  {"id":"gymbox","type":"checkbox"},
+  {"id":"securitybox","type":"checkbox"},
+  {"id":"visitparksel","type":"select"},
+  {"id":"addressname","type":"textbox"},
+  {"id":"address","type":"textbox"},
+  {"id":"state","type":"select"},
+  {"id":"zipcode","type":"textbox"},
+  {"id":"cities","type":"select"},
+  {"id":"stratum","type":"select"},
+  {"id":"proptype","type":"select"},
+  {"id":"propage","type":"select"},
+  {"id":"bath","type":"input"},
+  {"id":"rooms","type":"input"},
+  {"id":"floors","type":"input"},
+  {"id":"totalsqmeter","type":"input"},
+  {"id":"constsqmeter","type":"input"}
+],
+
+"rstype":[
+    {"id" : "0","value" : ""},
+    {"id" : "1","value" : "Casa"},
+    {"id" : "2","value" : "Apartamento"},
+    {"id" : "3","value" : "Oficina"},
+    {"id" : "4","value" : "Local"},
+    {"id" : "5","value" : "Bodega"}
+],
+"stratum" : [
+  {"id": "0", "value" : ""},
+  {"id" : "1","value" : "1"},
+  {"id" : "2","value" : "2"},
+  {"id" : "3","value" : "3"},
+  {"id" : "4","value" : "4"},
+  {"id" : "5","value" : "5"},
+  {"id" : "6","value" : "6"},
+  {"id" : "7","value" : "Rural"},
+  {"id" : "8","value" : "No Aplica"}
+],
+
+"years" : [
+  {"id" : "0","value" : ""},
+  {"id" : "1","value" : "Nuevo"},
+  {"id" : "2","value" : "1 a 5 años"},
+  {"id" : "3","value" : "6 a 10 años"},
+  {"id" : "4","value" : "11 a 15 años"},
+  {"id" : "5","value" : "16 a 20 años"},
+  {"id" : "6","value" : "21 a 25 años"},
+  {"id" : "7","value" : "26 a 30 años"},
+  {"id" : "8","value" : "31 años o mas"}
+]
+}

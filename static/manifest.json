@@ -1,0 +1,78 @@
+{
+	"sap.app": {
+		"id": "rshub.ui",
+		"applicationVersion": {
+			"version": "1.0.0"
+		}
+	},
+	"sap.ui5": {
+		"rootView": {
+            "id": "ShellBar",
+			"viewName": "rshub.ui.view.Shell",
+			"type": "XML",
+			"async": true
+		},
+		"dependencies": {
+			"libs": {
+				"sap.f": {},
+				"sap.m": {},
+				"sap.tnt": {}
+			}
+		},
+		"config": {
+			"sample": {
+				"stretch": true,
+				"files": [
+					"controller/Shell.controller.js",
+					"model/model.json",
+          "model/RegisterForm.json",
+					"view/Shell.view.xml",
+					"manifest.json"
+				]
+			}
+		},
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "viewPath": "rshub.ui.view",
+                "controlId": "mainCont",
+                "controlAggregation": "content",
+                "transition": "slide",
+                "async": true,
+                "bypassed": {
+                    "target": "notFound"
+                }
+            },
+            "routes": [{
+                "pattern": "",
+                "name": "Homeview",
+                "target": "home"
+                },
+                {
+                "pattern": "publicaciones",
+                "name": "Search",
+                "target": "search"
+                }
+            ],
+
+            "targets": {
+                "home": {
+                   "viewId": "home",
+                   "viewName": "Home",
+                   "viewLevel" : 1
+                },
+                "search": {
+                   "viewId": "search",
+                   "viewName": "Publicaciones",
+                   "viewLevel" : 2
+                },
+                "notFound": {
+                   "viewId": "notFound",
+                   "viewName": "dialogs.NotFound",
+                   "transition": "show"
+                }
+            }
+        }
+	}
+}

@@ -1,0 +1,92 @@
+<mvc:View controllerName="rshub.ui.view.Publicaciones"
+          xmlns:m="sap.m"
+          xmlns:mvc="sap.ui.core.mvc"
+          xmlns:t="sap.ui.table"
+          height="100%">
+  <m:VBox>
+    <m:Title text="THIS IS PUBLICACIONES" />
+    <m:HBox height="10rem">
+      <m:Title text="FILTERS GOES HERE"/>
+    </m:HBox>
+
+    <m:HBox height="10rem">
+      <t:Table id="urltable"
+              selectionMode="None"
+              visibleRowCount="7"
+              ariaLabelledBy="title"
+              rows="{/}"
+              width="100%">
+        <t:extension>
+          <m:OverflowToolbar>
+            <m:Title id="title" text="Listado de Publicaciones"/>
+            <m:ToolbarSpacer/>
+
+          </m:OverflowToolbar>
+        </t:extension>
+
+        <t:columns>
+          <t:Column width="3.5rem">
+            <m:Label text="Abrir" />
+            <t:template>
+              <m:Button icon="sap-icon://show" width="10%" press="onDetailViewPress"/>
+            </t:template>
+          </t:Column>
+            
+          <t:Column width="5%" hAlign="Center">
+            <m:Label text="Image" />
+            <t:template>
+<!--
+                <m:Text text="IMAGE HERE" wrapping="false" />
+-->
+                <m:Image src="{pictures}" width="100%" />
+            </t:template>
+          </t:Column>
+
+          <t:Column width="10%">
+            <m:Label text="Status" />
+            <t:template>
+              <m:Text text="{status}" wrapping="false" />
+            </t:template>
+          </t:Column>
+
+          <t:Column width="30%">
+            <m:Label text="Title" />
+            <t:template>
+              <m:Text text="{title}" wrapping="false" />
+            </t:template>
+          </t:Column>
+
+          <t:Column width="20%">
+            <m:Label text="Brand" />
+            <t:template>
+              <m:Text text="{brand}" wrapping="false" />
+            </t:template>
+          </t:Column>
+
+          <t:Column width="10%">
+            <m:Label text="Price" />
+            <t:template>
+              <m:Text text="${price}" wrapping="false" />
+            </t:template>
+          </t:Column>
+
+          <t:Column width="10%">
+            <m:Label text="URL Origen" />
+            <t:template>
+              <m:Link href="{urlOrig}" text="{source}" target="_blank"/>
+            </t:template>
+          </t:Column>
+
+          <t:Column width="10%">
+            <m:Label text="URL MercadoLibre" />
+            <t:template>
+              <m:Link href="{urlML}" text="MercadoLibre" target="_blank"/>
+            </t:template>
+          </t:Column>
+
+        </t:columns>
+      </t:Table>
+    </m:HBox>
+
+  </m:VBox>
+</mvc:View>

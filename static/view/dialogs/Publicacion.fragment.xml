@@ -1,0 +1,19 @@
+<core:FragmentDefinition
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core">
+    <m:Dialog id="publDialog"
+		      title="Detalles de la Publicacion"
+              afterClose=".onPublClose">
+        <m:content>
+            <m:Title text="AQUI VA LA INFO COMPLETA DE LA PUBLICACION"/>
+        </m:content>
+        
+        <m:beginButton>
+            <m:Button text="Guardar" press="onSave" />
+        </m:beginButton>
+        
+        <m:endButton>
+            <m:Button text="Cerrar" press="onDialogClose"/>
+        </m:endButton>
+    </m:Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,26 @@
+{   "initView": "registrar",
+
+    "navMenu":
+        [{
+            "text": "Home",
+            "key": "Homeview",
+            "icon": "sap-icon://home",
+            "enabled": true,
+            "newSection": false
+        },
+        {
+            "text": "Publicaciones",
+            "key": "Search",
+            "icon": "sap-icon://legend",
+            "enabled": true,
+            "newSection": false
+        }],
+    "navMenuFoot":
+      [{
+            "text": "Soporte",
+            "key": "support",
+            "icon": "sap-icon://headset",
+            "enabled": true ,
+            "newSection": true
+      }]
+}

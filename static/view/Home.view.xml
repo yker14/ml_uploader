@@ -1,0 +1,81 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc"
+          xmlns:m="sap.m"
+          xmlns:t="sap.ui.table"
+          xmlns:f="sap.ui.layout.form"
+          xmlns:l="sap.ui.layout"
+          xmlns:core="sap.ui.core"
+          height="100%"
+          controllerName="rshub.ui.view.Home">
+
+  <m:VBox class="sapUiSmallMargin"
+    alignContent="Center"
+        height="100%">
+
+                <m:Label text="URLs" />
+                <m:Input id="urlsinput"
+                         placeholder="https://www.warmVaginas.com"
+                         width="50%" />
+                <m:Select id="sourcelist"
+                          width="20%"
+                          items="{path: '/sources', templateShareable: 'false'}">
+                        <core:Item text="{value}" key="{id}" />
+                </m:Select>
+
+                <m:Label text="" />
+                <m:Button id="saveurl"
+                        text="Guardar URL"
+                        press="onURLSave"
+                        width="10%"/>
+
+          <t:Table id="urltable"
+          				selectionMode="MultiToggle"
+          				visibleRowCount="7"
+          				ariaLabelledBy="title"
+                  rows="{path: '/urls', templateShareable:'false'}"
+                  width="100%">
+          				<t:extension>
+          					<m:OverflowToolbar>
+          						<m:Title id="title" text="URLs Agregadas"/>
+          						<m:ToolbarSpacer/>
+                                <m:Button
+          							icon="sap-icon://begin"
+          							tooltip="Scrap All"
+          							press="scrapAllInit"/>
+          						<m:Button
+          							icon="sap-icon://begin"
+          							tooltip="Scrap Selected"
+          							press="scrapSelectedInit"/>
+          						<m:Button
+          							icon="sap-icon://delete"
+          							tooltip="Remove selection"
+          							press="removeSelection"/>
+          					</m:OverflowToolbar>
+          				</t:extension>
+
+          				<t:columns>
+          					<t:Column width="40%">
+          						<m:Label text="URL" />
+          						<t:template>
+          							<m:Text text="{url}" wrapping="false" />
+          						</t:template>
+          					</t:Column>
+
+                    <t:Column width="20%">
+                      <m:Label text="Fuente" />
+                      <t:template>
+                        <m:Text text="{source}" wrapping="false" />
+                      </t:template>
+                    </t:Column>
+
+                    <t:Column width="20%">
+                      <m:Label text="Scrap Status" />
+                      <t:template>
+                        <m:Text text="{status}" wrapping="false" />
+                      </t:template>
+                    </t:Column>
+
+          				</t:columns>
+          			</t:Table>
+
+  </m:VBox>
+</mvc:View>
