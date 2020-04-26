@@ -86,7 +86,7 @@
 		</tnt:sideContent>
 
 		<tnt:mainContents>
-
+<!--
           <ScrollContainer  id="mainCont"
                             horizontal="false"
                             vertical="true"
@@ -94,7 +94,15 @@
 					<content>
 					</content>
           </ScrollContainer>
+-->
 
+			<Page	id="mainCont"
+						showHeader="false"
+						enableScrolling="false">
+						<content>
+						</content>
+			</Page>
+			
 		</tnt:mainContents>
 
 	</tnt:ToolPage>

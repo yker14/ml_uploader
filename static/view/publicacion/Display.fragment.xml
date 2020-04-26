@@ -1,0 +1,111 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:l="sap.ui.layout"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:core="sap.ui.core">
+	<VBox class="sapUiSmallMargin">
+		<f:SimpleForm id="SimpleFormDisplay480_Trial"
+			editable="false"
+			layout="ResponsiveGridLayout"
+			title="{title}"
+			labelSpanXL="4"
+			labelSpanL="4"
+			labelSpanM="4"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="0"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="2"
+			columnsL="2"
+			columnsM="2"
+			singleContainerFullSize="false" >
+			<f:content>
+			<core:Title text="Office" />
+
+				<Label text="ID" />
+				<Text text="{id}" />
+
+				<Label text="ID Mercadolibre" />
+				<Text text="{ml_id}" />
+
+				<Label text="Estado de Publicacion" />
+				<Text text="{status}" />
+
+				<Label text="Fuente" />
+				<Text text="{fuente}" />
+
+				<Label text="Marca" />
+				<Text text="{brand}" />
+
+				<Label text="Modelo" />
+				<Text text="{model}" />
+
+				<Label text="Condicion" />
+				<Text text="{condition}" />
+
+				<Label text="Titulo Original" />
+				<Text text="{titleraw}" />
+
+				<Label text="Titulo Publicacion" />
+				<Text text="{title}" />
+
+				<Label text="ID Categoria" />
+				<Text text="{category_id}" />
+
+				<Label text="Costo" />
+				<Text text="{cost}" />
+
+				<Label text="Precio de Publicacion" />
+				<Text text="{price}" />
+
+				<Label text="Cantidad" />
+				<Text text="{available_quantity}" />
+				
+				<Label text="Tiempo de Manufactura" />
+				<Text text="{manufacturing_time}" />
+
+				<Label text="Metodo de Compra" />
+				<Text text="{buying_mode}" />
+
+
+				<Label text="Tipo de Garantia" />
+				<Text text="{warranty_type}" />
+
+				<Label text="Tiempo de Garantia" />
+				<Text text="{warranty_time}" />
+
+				<Label text="Envio" />
+				<Text text="{envio}" />
+
+				<Label text="Moneda" />
+				<Text text="{currency_id}" />
+
+				<Label text="Tipo de Publicacion" />
+				<Text text="{listing_type_id}" />
+
+				<Label text="Descripcion" />
+				<TextArea value="{description}" editable="false" height="10rem"/>
+
+			<core:Title text="Online" />
+
+				<Label text="URL Mercadolibre" />
+				<Link text="{urlml}" href="{urlml}" />
+
+				<Label text="URL Origen" />
+				<Link text="{urlorig}" href="{urlorig}" />
+
+			</f:content>
+		</f:SimpleForm>
+
+	<Title text="" />
+	
+	<Carousel class="sapUiContentPadding" loop="true" pages="{pictures}">
+		<pages>
+			<Image src="{source}" alt="{orden}"/>
+		</pages>
+	</Carousel>
+
+	</VBox>
+</core:FragmentDefinition>

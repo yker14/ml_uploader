@@ -14,19 +14,29 @@
               selectionMode="None"
               visibleRowCount="7"
               ariaLabelledBy="title"
-              rows="{/}"
+              rows="{/publicaciones}"
               width="100%">
         <t:extension>
           <m:OverflowToolbar>
             <m:Title id="title" text="Listado de Publicaciones"/>
             <m:ToolbarSpacer/>
+            <m:Button	icon="sap-icon://synchronize"
+                      tooltip="Refresh"
+                      press="refreshPublData"/>
 
           </m:OverflowToolbar>
         </t:extension>
 
         <t:columns>
-          <t:Column width="3.5rem">
-            <m:Label text="Abrir" />
+          <t:Column width="4rem" hAlign="Center">
+            <m:Label text="ID" />
+            <t:template>
+              <m:Text text="{id}"/>
+            </t:template>
+          </t:Column>
+
+          <t:Column width="4rem"> 
+            <m:Label text="Detalle"/>
             <t:template>
               <m:Button icon="sap-icon://show" width="10%" press="onDetailViewPress"/>
             </t:template>
@@ -42,42 +52,42 @@
             </t:template>
           </t:Column>
 
-          <t:Column width="10%">
+          <t:Column width="10%" hAlign="Center"> 
             <m:Label text="Status" />
             <t:template>
               <m:Text text="{status}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="30%">
+          <t:Column width="30%" hAlign="Center">
             <m:Label text="Title" />
             <t:template>
               <m:Text text="{title}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="20%">
+          <t:Column width="20%" hAlign="Center">
             <m:Label text="Brand" />
             <t:template>
               <m:Text text="{brand}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="10%">
+          <t:Column width="10%" hAlign="Center">
             <m:Label text="Price" />
             <t:template>
               <m:Text text="${price}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="10%">
+          <t:Column width="10%" hAlign="Center">
             <m:Label text="URL Origen" />
             <t:template>
               <m:Link href="{urlOrig}" text="{source}" target="_blank"/>
             </t:template>
           </t:Column>
 
-          <t:Column width="10%">
+          <t:Column width="10%" hAlign="Center">
             <m:Label text="URL MercadoLibre" />
             <t:template>
               <m:Link href="{urlML}" text="MercadoLibre" target="_blank"/>
