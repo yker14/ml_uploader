@@ -55,7 +55,7 @@ sap.ui.define([
           }.bind(this));
 
 
-
+/*
             //MOCK DATA
             publDataPath= sap.ui.require.toUrl("rshub/ui/model/publicacionesdata.json");
             this.oModel = new JSONModel(publDataPath, true);
@@ -65,7 +65,7 @@ sap.ui.define([
                 this.getView().byId("urltable").getModel().updateBindings(true);
             }.bind(this))
             //
-
+*/
         },
 
         onDetailViewPress: function(ev) {
