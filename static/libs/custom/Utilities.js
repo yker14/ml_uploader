@@ -29,46 +29,46 @@ sap.ui.define([
           return output;
         },
 
-				miscCount: function (maxResult, nameOfProp, minResult=0, finalText='', charAppend='', desc=false) {
+		miscCount: function (maxResult, nameOfProp, minResult=0, finalText='', charAppend='', desc=false) {
 
-						try {
-							var num, name, count, data;
+				try {
+					var num, name, count, data;
 
-							//(typeof(maxResult) != "number"
-							//|| maxResult == undefined) ? new Error("Input 'maxResult' is not a number.") : num = maxResult,
+					//(typeof(maxResult) != "number"
+					//|| maxResult == undefined) ? new Error("Input 'maxResult' is not a number.") : num = maxResult,
 
-							if (typeof(maxResult) != "number" || maxResult == undefined) {
-								throw new Error("Input 'maxResult' is not a number.");
-							} else {
-								num = maxResult;
-							}
+					if (typeof(maxResult) != "number" || maxResult == undefined) {
+						throw new Error("Input 'maxResult' is not a number.");
+					} else {
+						num = maxResult;
+					}
 
 
-							if (nameOfProp == undefined || nameOfProp == null || nameOfProp == '' ) {
-								throw new Error("Input 'nameOfProp' is not vallid.");
-							} else {
-								name = nameOfProp;
-							}
+					if (nameOfProp == undefined || nameOfProp == null || nameOfProp == '' ) {
+						throw new Error("Input 'nameOfProp' is not vallid.");
+					} else {
+						name = nameOfProp;
+					}
 
-							data = {};
-							data[nameOfProp] = [];
-							count = 0;
+					data = {};
+					data[nameOfProp] = [];
+					count = 0;
 
-							for (var i = minResult; i < maxResult; i++) {
-								count += 1;
-								var val = desc ? maxResult - count : i;
+					for (var i = minResult; i < maxResult; i++) {
+						count += 1;
+						var val = desc ? maxResult - count : i;
 
-								val += (i+1 >= maxResult) ? (' '+charAppend+' '+finalText) : (' '+charAppend);
-								data[nameOfProp].push({"id": count,"value": val.trim()});
-							}
+						val += (i+1 >= maxResult) ? (' '+charAppend+' '+finalText) : (' '+charAppend);
+						data[nameOfProp].push({"id": count,"value": val.trim()});
+					}
 
-							return data
+					return data
 
-						} catch(e) {
-							console.log("Error at Utils.miscCount");
-							console.log(e);
-							return null
-						}
+				} catch(e) {
+					console.log("Error at Utils.miscCount");
+					console.log(e);
+					return null
 				}
+		}
     };
 });

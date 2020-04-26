@@ -1,22 +1,30 @@
 sap.ui.define([
-	'sap/ui/Device',
 	'sap/ui/core/mvc/Controller',
 	'sap/ui/model/json/JSONModel',
-	'sap/m/Popover',
-	'sap/m/Button',
-	'sap/m/library',
-    'sap/ui/core/Fragment',
     'sap/ui/core/UIComponent',
-    'sap/m/library'
-], function (Device, Controller, JSONModel, Popover, Button, mobileLibrary, Fragment, UIComponent, sapMLib) {
+    'sap/m/library',
+    'rshub/ui/libs/custom/Utilities',
+    'rshub/ui/libs/custom/RouterContentHelper'
+], function (Controller, JSONModel, UIComponent, sapMLib, Utils, RouterContentHelper) {
 	"use strict";
 
-	var CController = Controller.extend("rshub.ui.view.Publicaciones", {
+	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicaciones"), {
 		onInit : function() {
           
-          this.oModel = null;
-          var publData = null;
-          var publDataPath = null;
+            var routeName = this.getOwnerComponent().getCurrentRoute();
+            this.getOwnerComponent().getRouter().getRoute(routeName).attachMatched(this._onRouteMatched, this);
+
+            this.refreshPublData();
+        },
+
+        _onRouteMatched: function() {
+            
+        },
+
+        refreshPublData: function () {
+            this.oModel = null;
+            var publData = null;
+            var publDataPath = null;
         
           //Get published items from database
 /*    
@@ -37,52 +45,38 @@ sap.ui.define([
             console.log(resp.responseText);
             publData = JSON.parse(resp.responseText);
             this.oModel = new JSONModel(publData, true);
+
+            
+            //Set the tables data to display
+            Promise.all([this.oModel]).then(function(values){
+                this.getView().byId("urltable").setModel(values[0]);
+                this.getView().byId("urltable").getModel().updateBindings(true);
+            }.bind(this))
+
           }.bind(this));
 */
             
-          //MOCK DATA
-          publDataPath= sap.ui.require.toUrl("rshub/ui/model/publicacionesdata.json");
-          this.oModel = new JSONModel(publDataPath, true);
-          //
+            //MOCK DATA
+            publDataPath= sap.ui.require.toUrl("rshub/ui/model/publicacionesdata.json");
+            this.oModel = new JSONModel(publDataPath, true);
 
-          //Set the tables data to display
-          Promise.all([this.oModel]).then(function(values){
-            this.getView().byId("urltable").setModel(values[0]);
-            this.getView().byId("urltable").getModel().updateBindings(true);
-          }.bind(this))
-
-        },
-        
-        getRouter : function () {
-            return UIComponent.getRouterFor(this);
+            Promise.all([this.oModel]).then(function(values){
+                this.getView().byId("urltable").setModel(values[0]);
+                this.getView().byId("urltable").getModel().updateBindings(true);
+            }.bind(this))
+            //
         },
 
         onDetailViewPress: function() {
 
-            //this.getRouter().navTo("Publicacion", {"?publId": {id: "0"}});
-            sapMLib.URLHelper.redirect("#/publicacion/?id=0",true)
-/*
-            var oView = this.getView(),
-                oController = this.getView().getController();
-            
-            Fragment.load({
-                id: oView.getId(),
-                controller: oController,
-                name: "rshub.ui.view.dialogs.Publicacion"
-            }).then(function (oDialog) {
-                // connect dialog to the root view of this component (models, lifecycle)
-                oView.addDependent(oDialog);
-                oDialog.open();
-            });
-*/
-        },
-        
-        onDialogClose: function(ev) {
-            this.getView().byId("publDialog").close()
-        },
-        
-        onPublClose: function(ev) {
-            ev.getSource().destroy(); 
+            var publId = 0;
+            var parameters = 
+                {
+                    "parameterName1": "parameterValue1",
+                    "?search": {"publId": publId}
+                };
+
+            RouterContentHelper.navigateTo(this, "Publicacion", parameters)            
         },
         
         onSave: function(ev) {

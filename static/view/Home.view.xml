@@ -27,28 +27,29 @@
                         press="onURLSave"
                         width="10%"/>
 
-          <t:Table id="urltable"
-          				selectionMode="MultiToggle"
-          				visibleRowCount="7"
-          				ariaLabelledBy="title"
-                  rows="{path: '/urls', templateShareable:'false'}"
-                  width="100%">
+          <t:Table  id="urltable"
+                    selectionMode="MultiToggle"
+                    visibleRowCount="7"
+                    ariaLabelledBy="title"
+                    rows="{path: '/urls', templateShareable:'false'}"
+                    width="100%">
           				<t:extension>
           					<m:OverflowToolbar>
           						<m:Title id="title" text="URLs Agregadas"/>
           						<m:ToolbarSpacer/>
-                                <m:Button
-          							icon="sap-icon://begin"
-          							tooltip="Scrap All"
-          							press="scrapAllInit"/>
-          						<m:Button
-          							icon="sap-icon://begin"
-          							tooltip="Scrap Selected"
-          							press="scrapSelectedInit"/>
-          						<m:Button
-          							icon="sap-icon://delete"
-          							tooltip="Remove selection"
-          							press="removeSelection"/>
+
+                      <m:Button	icon="sap-icon://begin"
+          							        tooltip="Scrap All"
+          							        press="scrapAllInit"/>
+<!--
+          						<m:Button icon="sap-icon://begin"
+                                tooltip="Scrap Selected"
+                                press="scrapSelectedInit"/>
+-->
+          						<m:Button	icon="sap-icon://delete"
+          							        tooltip="Remove selection"
+          							        press="removeSelection"/>
+
           					</m:OverflowToolbar>
           				</t:extension>
 

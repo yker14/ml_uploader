@@ -1,16 +1,15 @@
 sap.ui.define([
 	'sap/ui/core/mvc/Controller',
 	'sap/ui/model/json/JSONModel',
-  'sap/m/MessageBox',
-  'rshub/ui/libs/custom/Utilities',
-  'sap/m/Popover',
-  'sap/m/Button',
+	'sap/m/MessageBox',
+	'rshub/ui/libs/custom/Utilities',
+	'sap/m/Popover',
+	'sap/m/Button',
 	'sap/m/library',
-  'sap/ui/core/Popup',
-  'sap/ui/core/Fragment',
 	'sap/ui/core/routing/History',
-	'sap/ui/core/UIComponent'
-], function (Controller, JSONModel, MessageBox, Utils, Popover, Button, Library, Popup, Fragment, History, UIComponent) {
+	'sap/ui/core/UIComponent',
+    'rshub/ui/libs/custom/RouterContentHelper'
+], function (Controller, JSONModel, MessageBox, Utils, Popover, Button, Library, History, UIComponent, RouterContentHelper) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("controller.Shell"), {
@@ -18,12 +17,8 @@ sap.ui.define([
     onInit : function () {
 	    //Global variables for Controller
 	    this.oModel = new JSONModel();
-        this.oModel.loadData(sap.ui.require.toUrl("rshub/ui/model/") + "/pages.json", null, false);
+        this.oModel.loadData(sap.ui.require.toUrl("rshub/ui/model/") + "/menuItem.json", null, false);
 	    this.getView().setModel(this.oModel);
-		},
-
-    getRouter : function () {
-			return UIComponent.getRouterFor(this);
 		},
 
     onNavBack: function () {
@@ -41,8 +36,8 @@ sap.ui.define([
 
     onMenuItemSelect : function(ev) {
 			if (this.getOwnerComponent().getCurrentRoute() != ev.getParameter("item").getProperty("key")) {
-				this.byId("mainCont").removeAllContent();
-				this.getRouter().navTo(ev.getParameter("item").getProperty("key"));
+
+				RouterContentHelper.navigateTo(this, ev.getParameter("item").getProperty("key"))  
 			}
 		},
 

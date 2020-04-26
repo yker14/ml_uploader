@@ -7,7 +7,8 @@ function (UIComponent, Utils) {
 		metadata: {
 			manifest: "json",
       properties: {
-        "currentRouteName": {} // default type == "string"
+        "currentRouteName": {}, // default type == "string"
+        "rootView": {} 
       }
 		},
 
@@ -15,6 +16,7 @@ function (UIComponent, Utils) {
         // call the init function of the parent
         UIComponent.prototype.init.apply(this, arguments);
         this.getRouter().attachBeforeRouteMatched(this.onBeforeRouteMatched, this);
+        this.getRouter().attachRouteMatched(this.onRouteMatched, this)
 
         // create the views based on the url/hash
         this.getRouter().initialize();
@@ -24,9 +26,19 @@ function (UIComponent, Utils) {
       this.setCurrentRouteName(event.getParameter("name"));
     },
 
+    onRouteMatched: function (ev) {
+      this.setRootView(ev.getParameters().targetControl.getId());
+    },
+
     getCurrentRoute: function() {
-      //return this.getRouter().getRoute(this.getCurrentRouteName());
+      //getCurrentRouteName retrieves from metadata
       return this.getCurrentRouteName();
     },
+
+    getORootView: function() {
+      //getRootView retrieves from metadata
+      return this.getRootView();
+    }
+
 	});
 });
