@@ -25,7 +25,7 @@ sap.ui.define([
             this.oModel = null;
             var publData = null;
             var publDataPath = null;
-/*        
+     
           //Get published items from database   
           var resp = $.ajax({
               url: '/getpubl',
@@ -54,8 +54,7 @@ sap.ui.define([
 
           }.bind(this));
 
-*/
-
+/*
             //MOCK DATA
             publDataPath= sap.ui.require.toUrl("rshub/ui/model/publicacionesdata.json");
             this.oModel = new JSONModel(publDataPath, true);
@@ -65,8 +64,9 @@ sap.ui.define([
                 this.getView().byId("urltable").getModel().updateBindings(true);
             }.bind(this))
             //
-
+*/
         },
+
 
         onDetailViewPress: function(ev) {
     
