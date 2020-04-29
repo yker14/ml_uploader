@@ -56,7 +56,7 @@
                 "target": "search"
                 },
                 {
-                "pattern": "publicacion/{?search}",
+                "pattern": "publicacion/search{?search}",
                 "name": "Publicacion",
                 "target": "publ"
                 }
