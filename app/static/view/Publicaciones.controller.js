@@ -41,8 +41,7 @@ sap.ui.define([
 
               error: function(error) {
                 sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
-                    actions: ["OK", sap.m.MessageBox.Action.CLOSE],
-                    emphasizedAction: "OK"
+                    actions: [sap.m.MessageBox.Action.CLOSE],
                 });
               }
           });
@@ -51,7 +50,6 @@ sap.ui.define([
             publData = JSON.parse(resp.responseText);
             this.oModel = new JSONModel(publData, true);
 
-            
             //Set the tables data to display
             Promise.all([this.oModel]).then(function(values){
                 this.getView().byId("urltable").setModel(values[0]);

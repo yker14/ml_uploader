@@ -89,6 +89,7 @@ sap.ui.define([
 				actions: ["Aceptar", sap.m.MessageBox.Action.CLOSE],
 				emphasizedAction: sap.m.MessageBox.Action.CLOSE,
 				onClose: function (sAction) {
+					
 					if (sAction=="Aceptar") {
 
 						var resp = $.ajax({
@@ -108,13 +109,7 @@ sap.ui.define([
 						});
 						
 						resp.then(function() {
-
-							if (resp.status==200) {
-								sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
-							} else {
-								sap.m.MessageBox.error("Un error ocurrio.\n"+resp.responseText);
-							}
-
+							sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
 						}.bind(this));
 					}
 				}.bind(this)

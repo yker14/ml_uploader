@@ -57,7 +57,7 @@
           					<t:Column width="40%">
           						<m:Label text="URL" />
           						<t:template>
-          							<m:Text text="{url}" wrapping="false" />
+          							<m:Link text="{url}" href="{url}" wrapping="false" />
           						</t:template>
           					</t:Column>
 

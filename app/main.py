@@ -10,8 +10,18 @@ def homepage():
 
 @app.route('/urlload', methods=['POST'])
 def UrlLoad():
-    data = request.form
-    return jsonify(data)
+    data = request.get_json(force=True)
+
+    data = {"urls": [
+            {
+            "source": "Homecenter", 
+            "status": "Successfully Scraped", 
+            "url": "https://www.homecenter.com.co/homecenter-co/product/333563/?cid=vtrhom978514&=INTERNO"
+            }
+        ]}
+
+    
+    return (data, 200)
 
 @app.route('/getpubl')
 def getpublications():
@@ -55,7 +65,7 @@ def getpublications():
     }]
     }
 
-    return jsonify(data)
+    return (data, 200)
 
    
 @app.route('/publicaciones/<publ_id>')
@@ -89,17 +99,17 @@ def page(publ_id):
         }
     }
 
-    return jsonify(data)
+    return (data, 200)
 
 @app.route('/publicaciones/<publ_id>/delete', methods=['POST'])
 def delete(publ_id):
     
-    return 'ID {} has been deleted'.format(publ_id)
+    return ('ID {} has been deleted'.format(publ_id),200)
 
 @app.route('/publicaciones/<publ_id>/update', methods=['POST'])
 def update(publ_id):
     
-    return 'ID {} has been updated'.format(publ_id)
+    return ('ID {} has been updated'.format(publ_id),200)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)

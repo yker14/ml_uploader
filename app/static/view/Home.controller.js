@@ -30,6 +30,7 @@ sap.ui.define([
 		},
 		
 		onURLSave : function(ev) {
+
 			var inputUrl = this.getView().byId("urlsinput"),
 				newUrl = inputUrl.getValue();
 
@@ -39,6 +40,7 @@ sap.ui.define([
 			(newUrl!='' && newUrl.includes("http")) ? this.urlContainer["urls"].push({"url":newUrl,"source":sourceName, "status":"Not Scraped"}) : sap.m.MessageBox.alert("Inserta una URL valida.");
 			this.getView().byId("urltable").getModel().updateBindings(true);
 			inputUrl.setValue("");
+
 		},
 
 		removeSelection :  function(ev) {
@@ -57,37 +59,46 @@ sap.ui.define([
 
 		scrapAllInit : function() {
 
-			var urlTable = this.getView().byId("urltable");
+			
+			sap.m.MessageBox.warning("Se extraera la informacion de todas las URLs de la tabla. ¿Desea continuar?", {
+				actions: ["Aceptar", sap.m.MessageBox.Action.CLOSE],
+				emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+				onClose: function (sAction) {
+					
+					if (sAction=="Aceptar") {
+						var urlTable = this.getView().byId("urltable");
 
-			var items = {"urls": urlTable.getModel().getData().urls},
-            	items = JSON.stringify(items);
-            
-			var resp = $.ajax({
-				url: '/urlload',
-				type: "POST",
-				datatype : "application/json",
-				data: items,
-				success: function(result) {
-						return result;
-				},
+						var items = {"urls": urlTable.getModel().getData().urls},
+							items = JSON.stringify(items);
+						
+						var resp = $.ajax({
+							url: '/urlload',
+							type: "POST",
+							datatype : "application/json",
+							data: items,
+							success: function(result) {
+									return result;
+							},
 
-				error: function(error) {
-					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
-						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
-						emphasizedAction: "OK"
-					});
-				}
-			});
+							error: function(error) {
+								//CONNECTION ERROR HANDLING
+								sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+									actions: [sap.m.MessageBox.Action.CLOSE]
+								});
+							}
+						});
 
-			resp.then(function() {
+						resp.then(function() {
+								sap.m.MessageBox.success("URLs procesadas correctamente.\n"+resp.responseText);
 
-				console.log(resp.responseText);
-				
-				var data = JSON.parse(resp.responseText);
-				this.urlContainer = data;
-				urlTable.getModel().updateBindings(true);
+								var data = JSON.parse(resp.responseText);
+								this.urlContainer["urls"] = data["urls"];
+								urlTable.getModel().updateBindings(true);
+						}.bind(this));
+					}
 
-			}.bind(this));
+				}.bind(this)
+			})
 		}
 /*
 		scrapSelectedInit : function() {
