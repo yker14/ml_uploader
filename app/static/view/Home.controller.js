@@ -57,22 +57,25 @@ sap.ui.define([
 
 		scrapAllInit : function() {
 
-			console.log("Scrapping initiated");
+			var urlTable = this.getView().byId("urltable");
 
-			var items = {"urls": this.getView().byId("urltable").getModel().getData().urls},
+			var items = {"urls": urlTable.getModel().getData().urls},
             	items = JSON.stringify(items);
             
 			var resp = $.ajax({
 				url: '/urlload',
 				type: "POST",
+				datatype : "application/json",
 				data: items,
 				success: function(result) {
 						return result;
 				},
 
 				error: function(error) {
-						console.log(error);
-						return error;
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+						emphasizedAction: "OK"
+					});
 				}
 			});
 
@@ -80,7 +83,7 @@ sap.ui.define([
 
 				console.log(resp.responseText);
 				
-				data = JSON.parse(resp.responseText);
+				var data = JSON.parse(resp.responseText);
 				this.urlContainer = data;
 				urlTable.getModel().updateBindings(true);
 

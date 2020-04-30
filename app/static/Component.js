@@ -28,8 +28,6 @@ function (UIComponent, Utils) {
     },
 
     onRouteMatched: function (ev) {
-      sap.ui.core.BusyIndicator.show()
-      setTimeout(function(){console.log('waiting 3 secs')}, 3000)
       this.setRootView(ev.getParameters().targetControl.getId());
     },
 

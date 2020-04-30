@@ -33,14 +33,17 @@ sap.ui.define([
           //Get published items from database   
           var resp = $.ajax({
               url: '/getpubl',
+              datatype : "application/json",
               type: "GET",
               success: function(result) {
                   return result;
               },
 
               error: function(error) {
-                  console.log(error);
-                  return error;
+                sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+                    actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+                    emphasizedAction: "OK"
+                });
               }
           });
           

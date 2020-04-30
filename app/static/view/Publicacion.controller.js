@@ -3,13 +3,14 @@ sap.ui.define([
 	'sap/ui/model/json/JSONModel',
     'rshub/ui/libs/custom/Utilities',
     'sap/ui/core/UIComponent',
-	'sap/base/security/encodeURL'
-], function (Controller, JSONModel, Utils, UIComponent, EncodeURL) {
+	'sap/base/security/encodeURL',
+    'rshub/ui/libs/custom/RouterContentHelper'
+], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper) {
 	"use strict";
 
 	var CController = Controller.extend("rshub.ui.view.Publicacion", {
 		onInit : function() {
-            
+            this.publicId = null;
             var routeName = this.getOwnerComponent().getCurrentRoute();
             this.getOwnerComponent().getRouter().getRoute(routeName).attachMatched(this._onRouteMatched, this);
 
@@ -27,22 +28,26 @@ sap.ui.define([
 		},
 
         _onRouteMatched: function(ev) {
+			sap.ui.core.BusyIndicator.show()
 
             var currentURL = new URL(window.location.href.replace("/#","")),
             urlParams = new URLSearchParams(currentURL.search),
             publId = urlParams.get("publId");
-
+			this.publicId = publId;
 
             var resp = $.ajax({
-                url: '/publicaciones/'+publId,
+				url: '/publicaciones/'+publId,
+				datatype : "application/json",
                 type: "GET",
                 success: function(result) {
                     return result;
                 },
 
                 error: function(error) {
-                    console.log({"error": error});
-                    return error;
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+						emphasizedAction: "OK"
+					});
                 }
             });
             
@@ -66,7 +71,7 @@ sap.ui.define([
 		
 
 		onAfterRendering: function() {
-			sap.ui.core.BusyIndicator.hide();
+			sap.ui.core.BusyIndicator.hide()
 		},
 		
         handleEditPress: function () {
@@ -74,6 +79,54 @@ sap.ui.define([
 			//Clone the data
 			this._oSupplier = this.getView().getModel().getData();
 			this._toggleButtonsAndView(true);
+
+		},
+
+		handleDeletePress: function () {
+			var publId = this.publicId;
+
+			sap.m.MessageBox.warning("Se eliminara esta publicacion de la base de datos y de Mercadolibre. ¿Desea continuar?", {
+				actions: ["Aceptar", sap.m.MessageBox.Action.CLOSE],
+				emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+				onClose: function (sAction) {
+					if (sAction=="Aceptar") {
+
+						var resp = $.ajax({
+							url: '/publicaciones/'+publId+'/delete',
+							datatype : "application/json",
+							type: "POST",
+							success: function(result) {
+								return result;
+							},
+			
+							error: function(error) {
+								sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+error, {
+									actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+									emphasizedAction: "OK"
+								});
+							}
+						});
+						
+						resp.then(function() {
+
+							if (resp.status==200) {
+								sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
+							} else {
+								sap.m.MessageBox.error("Un error ocurrio.\n"+resp.responseText);
+							}
+
+						}.bind(this));
+					}
+				}.bind(this)
+			});
+
+			
+		},
+
+		handleBackPress: function () {
+
+			var sPreviousRouteName = UIComponent.getRouterFor(this.getView()).getRouteInfoByHash("publicaciones").name;
+			RouterContentHelper.navigateTo(this, sPreviousRouteName);
 
 		},
 
@@ -96,8 +149,6 @@ sap.ui.define([
 
 		},
 
-		_formFragments: {},
-
 		_toggleButtonsAndView : function (bEdit) {
 			var oView = this.getView();
 
@@ -105,11 +156,14 @@ sap.ui.define([
 			oView.byId("edit").setVisible(!bEdit);
 			oView.byId("save").setVisible(bEdit);
 			oView.byId("cancel").setVisible(bEdit);
+			oView.byId("del").setVisible(!bEdit);
 
 			// Set the right form type
 			this._showFormFragment(bEdit ? "Change" : "Display");
 		},
 
+		_formFragments: {},
+		
 		_getFormFragment: function (sFragmentName) {
 			var oFormFragment = this._formFragments[sFragmentName];
 

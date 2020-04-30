@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+#import requests
 
 app = Flask(__name__)
 
@@ -9,7 +10,8 @@ def homepage():
 
 @app.route('/urlload', methods=['POST'])
 def UrlLoad():
-    return 'successful'
+    data = request.form
+    return jsonify(data)
 
 @app.route('/getpubl')
 def getpublications():
@@ -89,11 +91,15 @@ def page(publ_id):
 
     return jsonify(data)
 
-@app.route('/publicaciones/<publ_id>/delete')
+@app.route('/publicaciones/<publ_id>/delete', methods=['POST'])
 def delete(publ_id):
     
     return 'ID {} has been deleted'.format(publ_id)
 
+@app.route('/publicaciones/<publ_id>/update', methods=['POST'])
+def update(publ_id):
+    
+    return 'ID {} has been updated'.format(publ_id)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)

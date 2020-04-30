@@ -10,7 +10,7 @@ sap.ui.define([
 
 	return {
 
-        navigateTo : function(context=this, routeName='NoPage', urlParams=null, componentTargetParam=null, bReplace=true) {
+        navigateTo : function(context=this, routeName='NoPage', urlParams=null, componentTargetParam=null, bReplace=false) {
             
             var contextRouter = UIComponent.getRouterFor(context);
 
