@@ -1,3 +1,4 @@
 #Ignored Folders
 .vscode/
 __pycache__/
+app/__pycache__/
