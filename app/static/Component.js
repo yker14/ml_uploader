@@ -1,5 +1,6 @@
 sap.ui.define(['sap/ui/core/UIComponent',
-               './libs/custom/Utilities'],
+               './libs/custom/Utilities'
+              ],
 function (UIComponent, Utils) {
 	"use strict";
 
@@ -27,6 +28,8 @@ function (UIComponent, Utils) {
     },
 
     onRouteMatched: function (ev) {
+      sap.ui.core.BusyIndicator.show()
+      setTimeout(function(){console.log('waiting 3 secs')}, 3000)
       this.setRootView(ev.getParameters().targetControl.getId());
     },
 

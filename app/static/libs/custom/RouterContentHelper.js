@@ -3,7 +3,7 @@ sap.ui.define([
     "./RouterContentHelper",
     "sap/ui/core/UIComponent",
     "sap/ui/core/routing/History"
-], function (Utils, RouterContentHelper, UIComponent) {
+], function (Utils, RouterContentHelper, UIComponent, History) {
 	"use strict";
 
 	// class providing navigation standardization methods.

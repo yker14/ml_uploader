@@ -21,6 +21,10 @@ sap.ui.define([
             
         },
 
+        onAfterRendering: function() {
+            sap.ui.core.BusyIndicator.hide();
+        },
+
         refreshPublData: function () {
             this.oModel = null;
             var publData = null;
@@ -41,7 +45,6 @@ sap.ui.define([
           });
           
           resp.then(function() {
-            console.log(resp.responseText);
             publData = JSON.parse(resp.responseText);
             this.oModel = new JSONModel(publData, true);
 
@@ -53,23 +56,11 @@ sap.ui.define([
             }.bind(this))
 
           }.bind(this));
-
-/*
-            //MOCK DATA
-            publDataPath= sap.ui.require.toUrl("rshub/ui/model/publicacionesdata.json");
-            this.oModel = new JSONModel(publDataPath, true);
-
-            Promise.all([this.oModel]).then(function(values){
-                this.getView().byId("urltable").setModel(values[0]);
-                this.getView().byId("urltable").getModel().updateBindings(true);
-            }.bind(this))
-            //
-*/
         },
 
 
         onDetailViewPress: function(ev) {
-    
+            
             var publId = ev.getSource().getParent().getCells()[0].getText();
             var parameters = 
                 {

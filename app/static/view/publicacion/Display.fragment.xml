@@ -91,10 +91,10 @@
 			<core:Title text="Online" />
 
 				<Label text="URL Mercadolibre" />
-				<Link text="{urlml}" href="{urlml}" />
+				<Link text="{urlml}" href="{urlml}" target="_blank"/>
 
 				<Label text="URL Origen" />
-				<Link text="{urlorig}" href="{urlorig}" />
+				<Link text="{urlorig}" href="{urlorig}" target="_blank"/>
 
 			</f:content>
 		</f:SimpleForm>
