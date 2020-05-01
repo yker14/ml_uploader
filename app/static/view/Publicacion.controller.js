@@ -28,7 +28,9 @@ sap.ui.define([
 		},
 
         _onRouteMatched: function(ev) {
-			sap.ui.core.BusyIndicator.show()
+			sap.ui.core.BusyIndicator.show();
+			
+			setTimeout(function() {sap.ui.core.BusyIndicator.hide()}, 3000);
 
             var currentURL = new URL(window.location.href.replace("/#","")),
             urlParams = new URLSearchParams(currentURL.search),
@@ -54,9 +56,11 @@ sap.ui.define([
             resp.then(function() {
                 var publData = JSON.parse(resp.responseText);
                 this.oModel = new JSONModel(publData, true);
-    
-                
-                //Set the tables data to display
+	
+				//Set up image uploader config
+				//this.imageUploaderInit(publData);
+				
+                //Set the model data to display
                 Promise.all([this.oModel]).then(function(values){
                     this.getView().setModel(values[0]);
                     this.getView().bindElement("/publicacion");
@@ -110,6 +114,7 @@ sap.ui.define([
 						
 						resp.then(function() {
 							sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
+
 						}.bind(this));
 					}
 				}.bind(this)
@@ -177,6 +182,13 @@ sap.ui.define([
 
 			oPage.removeAllContent();
 			oPage.insertContent(this._getFormFragment(sFragmentName));
+		},
+
+		//IMG UPLOAD FUNCTIONS
+		imageUploaderInit: function () {
+			console.log('initiated thiiis');
+
+
 		},
 
 		onExit: function() {

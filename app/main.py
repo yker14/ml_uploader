@@ -27,43 +27,19 @@ def UrlLoad():
 def getpublications():
 
     data = {"publicaciones":[
-    {"id":"1",
-        "brand": "Artecma", 
-        "pictures":"images/Coj\u00ednErgon\u00f3micoNegro/Coj\u00ednErgon\u00f3micoNegro0",
-        "price": 117350, 
-        "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-        "urlML": None, 
-        "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
-        "source":"Victors Secret"
-    }, 
-    {"id":"27",
-        "brand": "Artecma", 
-        "pictures":"images/Coj\u00ednErgon\u00f3micoNegro/Coj\u00ednErgon\u00f3micoNegro1",
-        "price": 117350, 
-        "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-        "urlML": None, 
-        "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
-        "source":"Victors Secret"
-    },
-    {"id":"123456",
-        "brand": "Artecma", 
-        "pictures":"./static/media/images/darksouls/darksouls.jpg",
-        "price": 117350, 
-        "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-        "urlML": None, 
-        "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
-        "source":"Victors Secret"
-    },
-    {"id":"300",
-        "brand": "Artecma", 
-        "pictures":"./static/media/images/darksouls/darksouls.jpg",
-        "price": 117350, 
-        "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-        "urlML": None, 
-        "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
-        "source":"Victors Secret"
-    }]
-    }
+	{
+	"id": 24, 
+	"source": "./static/media/images/darksouls/darksouls.jpg",
+	"status": "Nuevo", 
+	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
+	"brand": "RTA Design", 
+	"price": 169850, 
+	"urlorig": "https://www.homecenter.com.co/homecenter-co/product/334041/Como-6-sillas-Napoles-Espera-Negra/334041", 
+	"fuente": "Homecenter", 
+	"urlml": None
+	}
+
+    ]}
 
     return (data, 200)
 

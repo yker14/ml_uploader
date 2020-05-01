@@ -48,7 +48,7 @@
 <!--
                 <m:Text text="IMAGE HERE" wrapping="false" />
 -->
-                <m:Image src="{pictures}" width="100%" />
+                <m:Image src="{source}" width="100%" />
             </t:template>
           </t:Column>
 
@@ -83,14 +83,14 @@
           <t:Column width="10%" hAlign="Center">
             <m:Label text="URL Origen" />
             <t:template>
-              <m:Link href="{urlOrig}" text="{source}" target="_blank"/>
+              <m:Link href="{urlorig}" text="{fuente}" target="_blank"/>
             </t:template>
           </t:Column>
 
           <t:Column width="10%" hAlign="Center">
             <m:Label text="URL MercadoLibre" />
             <t:template>
-              <m:Link href="{urlML}" text="MercadoLibre" target="_blank"/>
+              <m:Link href="{urlml}" text="MercadoLibre" target="_blank"/>
             </t:template>
           </t:Column>
 
