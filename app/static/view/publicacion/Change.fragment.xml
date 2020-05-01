@@ -23,7 +23,7 @@
 			columnsM="2"
 			singleContainerFullSize="false" >
 			<f:content>
-            <core:Title text="Office" />
+            <core:Title text="Datos de Publicacion" />
 
 				<Label text="ID" />
 				<Text text="{id}" />
@@ -41,7 +41,7 @@
 				<Text text="{brand}" />
 
 				<Label text="Modelo" />
-				<Text text="{model}" />
+				<Input value="{model}" />
 
 				<Label text="Condicion" />
 				<Text text="{condition}" />
@@ -104,14 +104,13 @@
 		</f:SimpleForm>
 
 		<upload:UploadSet
-			id="UploadSet"
+			id="uploadset"
 			instantUpload="false"
 			showIcons="true"
 			uploadEnabled="true"
-			terminationEnabled="true"
 			fileTypes="jpeg,png,jpg"
 			maxFileNameLength="30"
-			maxFileSize="200"
+			maxFileSize="3"
 			mediaTypes="image/jpeg,image/png,image/jpg"
 			uploadUrl="static/media/images"
 			items="{path: '/items', templateShareable: false}">

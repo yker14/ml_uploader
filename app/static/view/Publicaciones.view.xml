@@ -43,7 +43,7 @@
           </t:Column>
             
           <t:Column width="5%" hAlign="Center">
-            <m:Label text="Image" />
+            <m:Label text="Imagen" />
             <t:template>
 <!--
                 <m:Text text="IMAGE HERE" wrapping="false" />

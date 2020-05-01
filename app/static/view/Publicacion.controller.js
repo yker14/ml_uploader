@@ -10,7 +10,8 @@ sap.ui.define([
 
 	var CController = Controller.extend("rshub.ui.view.Publicacion", {
 		onInit : function() {
-            this.publicId = null;
+			this.publicId = null;
+			this.publData = null;
             var routeName = this.getOwnerComponent().getCurrentRoute();
             this.getOwnerComponent().getRouter().getRoute(routeName).attachMatched(this._onRouteMatched, this);
 
@@ -54,11 +55,11 @@ sap.ui.define([
             });
             
             resp.then(function() {
-                var publData = JSON.parse(resp.responseText);
-                this.oModel = new JSONModel(publData, true);
-	
+                this.publData = JSON.parse(resp.responseText);
+				this.oModel = new JSONModel(this.publData, true);
+				
 				//Set up image uploader config
-				//this.imageUploaderInit(publData);
+				this.imageUploaderInit(this.publData);
 				
                 //Set the model data to display
                 Promise.all([this.oModel]).then(function(values){
@@ -160,6 +161,7 @@ sap.ui.define([
 
 			// Set the right form type
 			this._showFormFragment(bEdit ? "Change" : "Display");
+			
 		},
 
 		_formFragments: {},
@@ -167,14 +169,22 @@ sap.ui.define([
 		_getFormFragment: function (sFragmentName) {
 			var oFormFragment = this._formFragments[sFragmentName];
 
-			if (oFormFragment) {
+			if (!oFormFragment) {
+				var oChangeFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + "Change");
+				this._formFragments["Change"] = oChangeFragment;
+				this.getView().addDependent(oChangeFragment);
+
+				var oDisplayFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + "Display");
+				this._formFragments["Display"] = oDisplayFragment;
+				this.getView().addDependent(oDisplayFragment);
+
+				return this._formFragments[sFragmentName];
+
+			} else {
 				return oFormFragment;
 			}
 
-			oFormFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + sFragmentName);
-
-			this._formFragments[sFragmentName] = oFormFragment;
-			return this._formFragments[sFragmentName];
+			//oFormFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + sFragmentName);
 		},
 
 		_showFormFragment : function (sFragmentName) {
@@ -185,10 +195,31 @@ sap.ui.define([
 		},
 
 		//IMG UPLOAD FUNCTIONS
-		imageUploaderInit: function () {
+		imageUploaderInit: function (data) {
 			console.log('initiated thiiis');
 
+			console.log(data);
+			var uploadController = this.getView().byId("uploadset"),
+				imagesList = data["publicacion"]["pictures"],
+				firstImagePath = imagesList[0].source,
+				imagesPath = '';
 
+			//Get path to put image on	
+			if (firstImagePath==null || firstImagePath==undefined || firstImagePath=='') {
+				
+				//If no image path or image available for first image, set NoFolderImg as default
+				imagesPath = 'static/media/images/NoFolderImg';
+
+			} else {
+
+				//Set the new path based on the first images path
+				var listItems = firstImagePath.split("/");
+					
+				listItems.pop();
+				imagesPath = listItems.join("/");
+			}
+
+			uploadController.setUploadUrl(imagesPath);
 		},
 
 		onExit: function() {
