@@ -102,50 +102,73 @@
 
 			</f:content>
 		</f:SimpleForm>
+		<f:SimpleForm id="simpleformImages"
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="Imagenes"
+			labelSpanXL="4"
+			labelSpanL="4"
+			labelSpanM="4"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="0"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="2"
+			columnsL="2"
+			columnsM="2"
+			singleContainerFullSize="false" >
+			<f:content>
+            <core:Title/>
 
-		<upload:UploadSet
-			id="uploadset"
-			instantUpload="false"
-			showIcons="true"
-			uploadEnabled="true"
-			fileTypes="jpeg,png,jpg"
-			maxFileNameLength="30"
-			maxFileSize="3"
-			mediaTypes="image/jpeg,image/png,image/jpg"
-			uploadUrl="static/media/images"
-			items="{path: '/items', templateShareable: false}">
-		<upload:items>
-			<upload:UploadSetItem
-					fileName="{fileName}"
-					mediaType="{mediaType}"
-					url="{url}"
-					thumbnailUrl="{thumbnailUrl}"
-					attributes="{path: 'attributes', templateShareable: false}"
-					markers="{path: 'markers', templateShareable: false}"
-					statuses="{path: 'statuses', templateShareable: false}"
-					uploadState="{uploadState}">
-				<upload:attributes>
-					<ObjectAttribute
-							title="{title}"
-							text="{text}"
-							active="{active}"/>
-				</upload:attributes>
-				<upload:markers>
-					<ObjectMarker
-							type="{type}"
-							visibility="{visibility}"/>
-				</upload:markers>
-				<upload:statuses>
-					<ObjectStatus
-							title="{title}"
-							text="{text}"
-							state="{state}"
-							icon="{icon}"
-							active="{active}"/>
-				</upload:statuses>
-			</upload:UploadSetItem>
-		</upload:items>
-	</upload:UploadSet>
+				<upload:UploadSet
+					id="uploadset"
+					instantUpload="false"
+					showIcons="false"
+					uploadEnabled="true"
+					fileTypes="jpeg,png,jpg"
+					maxFileNameLength="30"
+					maxFileSize="3"
+					mediaTypes="image/jpeg,image/png,image/jpg"
+					uploadUrl="static/media/images"
+					items="{path: '/publicacion/pictures', templateShareable: false}">
+					<upload:items>
+						<upload:UploadSetItem
+								fileName="{filename}"
+								mediaType="image/{filetype}"
+								url="{source}"
+								thumbnailUrl="{source}"
+								uploadState="Complete">
+
+						</upload:UploadSetItem>
+					</upload:items>
+				</upload:UploadSet>
+			
+			<core:Title text="Prioridad de las imagenes"/>
+			<VBox>
+				<VBox>
+					<Toolbar height="3rem" design="Transparent" />
+				</VBox>
+				<VBox items="{path:'/publicacion/pictures', sorter:{ path: 'orden' }}">
+					<items>
+					<Toolbar height="100%" design="Info" >
+						<Image src="{source}" width="10%" />
+						<Label text="{filename}"/>
+						<ToolbarSpacer/>
+						<Text text="Orden" />
+						<Select	forceSelection="false"
+								selectedKey="{orden}" 
+								items="{orderselect}">
+
+							<core:Item key="{key}" text="{text}" />
+						</Select>
+					</Toolbar>
+					</items>
+				</VBox>
+			</VBox>
+			</f:content>
+		</f:SimpleForm>
 
 	</VBox>
 </core:FragmentDefinition>

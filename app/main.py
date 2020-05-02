@@ -70,8 +70,27 @@ def page(publ_id):
         "condition": "new", 
         "listing_type_id": "gold_special", 
         "fuente": "Homecenter", 
-        "urlorig": "https://www.homecenter.com.co/homecenter-co/product/160689/?cid=494566&=INTERNA", 
-        "pictures": [{"id": 41, "source": "static/media/images/darksouls/darksouls.jpg", "orden": 1}, {"id": 42, "source": "static/media/images/darksouls/darksouls.jpg", "orden": 2}]
+        "urlorig": "https://www.homecenter.com.co/homecenter-co/product/160689/?cid=494566&=INTERNA",
+        "mainfolder": "static/media/images/darksouls/darksouls.jpg",  
+        "pictures": [
+                        {
+                        "id":"12356",
+                        "folder":"static/media/images/darksouls",
+                        "filename":"imagenmentira.jpg",
+                        "filetype":"jpg",
+                        "source":"static/media/images/darksouls/darksouls.jpg",
+                        "orden":"2"
+                        },
+                        {
+                        "id":"9342567",
+                        "folder":"static/media/images/darksouls",
+                        "filename":"darksouls.jpg",
+                        "filetype":"jpg",
+                        "source":"static/media/images/darksouls/darksouls.jpg",
+                        "orden":"1"
+                        }
+
+                    ]   
         }
     }
 

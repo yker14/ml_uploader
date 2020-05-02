@@ -183,8 +183,6 @@ sap.ui.define([
 			} else {
 				return oFormFragment;
 			}
-
-			//oFormFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + sFragmentName);
 		},
 
 		_showFormFragment : function (sFragmentName) {
@@ -196,30 +194,60 @@ sap.ui.define([
 
 		//IMG UPLOAD FUNCTIONS
 		imageUploaderInit: function (data) {
-			console.log('initiated thiiis');
-
+			console.log('imgupload init');
 			console.log(data);
+
 			var uploadController = this.getView().byId("uploadset"),
-				imagesList = data["publicacion"]["pictures"],
-				firstImagePath = imagesList[0].source,
-				imagesPath = '';
+				mainfolder = data["publicacion"]["mainfolder"];
 
-			//Get path to put image on	
-			if (firstImagePath==null || firstImagePath==undefined || firstImagePath=='') {
+/*
+			//Create attributes of the picture
+			for (var i = 0; i < data["publicacion"]["pictures"].length; i++) {
 				
-				//If no image path or image available for first image, set NoFolderImg as default
-				imagesPath = 'static/media/images/NoFolderImg';
+				data["publicacion"]["pictures"][i]["attributes"] = 
+					{
+					"id":data["publicacion"]["pictures"][i]["id"],
+					"order":data["publicacion"]["pictures"][i]["orden"],
+					"type":data["publicacion"]["pictures"][i]["filetype"]					
+					}
+			}
+*/
+			//Create order Select List based on number of pictures available
+			var picturesCount = data["publicacion"]["pictures"].length,
+				selectArray = [];
+				
+			selectArray.push({"key": 0, "text": ""}) ;
 
-			} else {
-
-				//Set the new path based on the first images path
-				var listItems = firstImagePath.split("/");
-					
-				listItems.pop();
-				imagesPath = listItems.join("/");
+			for (var i = 0; i < picturesCount; i++) {
+				selectArray.push({"key": i+1, "text": (i+1).toString()});
+				data["publicacion"]["pictures"][i]["orderselect"] = selectArray;
 			}
 
-			uploadController.setUploadUrl(imagesPath);
+			var dataModel = new JSONModel(data);
+			uploadController.setModel(dataModel);
+			uploadController.setUploadUrl(mainfolder);
+
+			//Attach event handler functions
+			uploadController.attachAfterItemAdded(function() {
+
+			}.bind(this));
+			
+			uploadController.attachBeforeItemEdited(function() {
+
+			}.bind(this));
+			
+			uploadController.attachBeforeItemRemoved(function() {
+
+			}.bind(this));
+			
+			uploadController.attachBeforeUploadStarts(function() {
+
+			}.bind(this));
+
+			uploadController.attachUploadCompleted(function() {
+
+			}.bind(this));
+			
 		},
 
 		onExit: function() {
