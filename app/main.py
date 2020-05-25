@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from urllib.parse import unquote
 #import requests
 
 app = Flask(__name__)
@@ -29,6 +30,17 @@ def getpublications():
     data = {"publicaciones":[
 	{
 	"id": 24, 
+	"source": "./static/media/images/darksouls/darksouls.jpg",
+	"status": "Nuevo", 
+	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
+	"brand": "RTA Design", 
+	"price": 169850, 
+	"urlorig": "https://www.homecenter.com.co/homecenter-co/product/334041/Como-6-sillas-Napoles-Espera-Negra/334041", 
+	"fuente": "Homecenter", 
+	"urlml": None
+	},
+    {
+	"id": 265,
 	"source": "./static/media/images/darksouls/darksouls.jpg",
 	"status": "Nuevo", 
 	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
@@ -70,27 +82,7 @@ def page(publ_id):
         "condition": "new", 
         "listing_type_id": "gold_special", 
         "fuente": "Homecenter", 
-        "urlorig": "https://www.homecenter.com.co/homecenter-co/product/160689/?cid=494566&=INTERNA",
-        "mainfolder": "static/media/images/darksouls/darksouls.jpg",  
-        "pictures": [
-                        {
-                        "id":"12356",
-                        "folder":"static/media/images/darksouls",
-                        "filename":"imagenmentira.jpg",
-                        "filetype":"jpg",
-                        "source":"static/media/images/darksouls/darksouls.jpg",
-                        "orden":"2"
-                        },
-                        {
-                        "id":"9342567",
-                        "folder":"static/media/images/darksouls",
-                        "filename":"darksouls.jpg",
-                        "filetype":"jpg",
-                        "source":"static/media/images/darksouls/darksouls.jpg",
-                        "orden":"1"
-                        }
-
-                    ]   
+        "urlorig": "https://www.homecenter.com.co/homecenter-co/product/160689/?cid=494566&=INTERNA"
         }
     }
 
@@ -105,6 +97,52 @@ def delete(publ_id):
 def update(publ_id):
     
     return ('ID {} has been updated'.format(publ_id),200)
+
+@app.route('/publicaciones/images/request/<publ_id>')
+def imgreq(publ_id):
+    
+    data = {
+        "mainfolder": "static/media/images/darksouls",
+        "pictures": [
+                    {
+                    "id":"12356",
+                    "folder":"static/media/images/darksouls",
+                    "filename":"darksouls.jpg",
+                    "filetype":"jpg",
+                    "source":"static/media/images/darksouls/darksouls.jpg",
+                    "orden":"2"
+                    },
+                    {
+                    "id":"9342567",
+                    "folder":"static/media/images/darksouls",
+                    "filename":"screenshot.png",
+                    "filetype":"png",
+                    "source":"static/media/images/darksouls/screenshot.png",
+                    "orden":"1"
+                    }]
+            }
+
+    return (data,200)
+
+
+
+@app.route('/publicaciones/images/<mainfolder>', methods=['POST'])
+def imgupdate(mainfolder):
+    
+    fileType = request.content_type.split('/')[1]
+    fileContent = request.get_data()
+    
+    #Decode the Path in mainfolder (same as Source)
+    folder = unquote(mainfolder)
+    fileName = request.headers.get("File-Name-Header")
+
+    with open("./app/"+folder+"/"+fileName,"wb") as f:
+        f.write(request.get_data()) 
+
+    
+
+    return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName),200)
+
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)

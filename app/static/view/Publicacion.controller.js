@@ -4,14 +4,23 @@ sap.ui.define([
     'rshub/ui/libs/custom/Utilities',
     'sap/ui/core/UIComponent',
 	'sap/base/security/encodeURL',
-    'rshub/ui/libs/custom/RouterContentHelper'
-], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper) {
+	'rshub/ui/libs/custom/RouterContentHelper',
+	'sap/ui/core/Fragment'
+], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper, Fragment) {
 	"use strict";
 
-	var CController = Controller.extend("rshub.ui.view.Publicacion", {
+	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicacion"), {
+
+		viewData : {},
+		viewType : "Display",
+		publData : {},
+		publicId : null,
+		publImg : {},
+		mainFolder : null,
+		headerFileName: null,
+
 		onInit : function() {
-			this.publicId = null;
-			this.publData = null;
+		
             var routeName = this.getOwnerComponent().getCurrentRoute();
             this.getOwnerComponent().getRouter().getRoute(routeName).attachMatched(this._onRouteMatched, this);
 
@@ -29,14 +38,12 @@ sap.ui.define([
 		},
 
         _onRouteMatched: function(ev) {
-			sap.ui.core.BusyIndicator.show();
-			
-			setTimeout(function() {sap.ui.core.BusyIndicator.hide()}, 3000);
+			//sap.ui.core.BusyIndicator.show();
 
             var currentURL = new URL(window.location.href.replace("/#","")),
-            urlParams = new URLSearchParams(currentURL.search),
-            publId = urlParams.get("publId");
-			this.publicId = publId;
+				urlParams = new URLSearchParams(currentURL.search),
+				publId = urlParams.get("publId");
+				this.publicId = publId;
 
             var resp = $.ajax({
 				url: '/publicaciones/'+publId,
@@ -47,7 +54,7 @@ sap.ui.define([
                 },
 
                 error: function(error) {
-					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n" + JSON.stringify(error), {
 						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
 						emphasizedAction: "OK"
 					});
@@ -58,22 +65,56 @@ sap.ui.define([
                 this.publData = JSON.parse(resp.responseText);
 				this.oModel = new JSONModel(this.publData, true);
 				
-				//Set up image uploader config
-				this.imageUploaderInit(this.publData);
-				
                 //Set the model data to display
-                Promise.all([this.oModel]).then(function(values){
+                Promise.all([this.oModel]).then(function(values) {
                     this.getView().setModel(values[0]);
                     this.getView().bindElement("/publicacion");
 					this.getView().getModel().updateBindings(true);
+					
                 }.bind(this))
     
-              }.bind(this));
+			  }.bind(this));
+			  
+			// Request publication images
+
+			var imgResp = $.ajax({
+				url: '/publicaciones/images/request/'+publId,
+				datatype : "application/json",
+                type: "GET",
+                success: function(result) {
+                    return result;
+                },
+
+                error: function(error) {
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n" + JSON.stringify(error), {
+						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+						emphasizedAction: "OK"
+					});
+                }
+            });
+            
+            imgResp.then(function() {
+                this.publImg = JSON.parse(imgResp.responseText);
+				this.oImgModel = new JSONModel(this.publImg, true);
+				
+                //Set the model data to display
+                Promise.all([this.oImgModel]).then(function(values) {
+					var oCarousel = this.getView().byId("idcarousel");
+					oCarousel.setModel(values[0]);
+					oCarousel.updateBindings(true);
+					
+                }.bind(this))
+    
+			  }.bind(this));
 
 			// Set the initial form to be the display one
-			this._showFormFragment("Display");
+			this._showFormFragment(this.viewType);
+			
 		},
 		
+		onBeforeRendering: function() {
+			sap.ui.core.BusyIndicator.show()
+		},
 
 		onAfterRendering: function() {
 			sap.ui.core.BusyIndicator.hide()
@@ -82,9 +123,14 @@ sap.ui.define([
         handleEditPress: function () {
 
 			//Clone the data
-			this._oSupplier = this.getView().getModel().getData();
-			this._toggleButtonsAndView(true);
+			this.viewData = JSON.parse(JSON.stringify(this.getView().getModel().getData()));
 
+			this._toggleButtonsAndView(true);
+							
+			//Set up image uploader config
+			if (this.viewType == "Change") {
+				this.imageUploaderInit(this.publImg);
+			}
 		},
 
 		handleDeletePress: function () {
@@ -121,12 +167,13 @@ sap.ui.define([
 				}.bind(this)
 			});
 
-			
+			this.handleBackPress();
 		},
 
 		handleBackPress: function () {
 
 			var sPreviousRouteName = UIComponent.getRouterFor(this.getView()).getRouteInfoByHash("publicaciones").name;
+			this.onExit();
 			RouterContentHelper.navigateTo(this, sPreviousRouteName);
 
 		},
@@ -135,9 +182,9 @@ sap.ui.define([
 
 			//Restore the data
 			var oModel = this.getView().getModel();
-			var oData = oModel.getData();
+			var oData = null;
 
-			oData = this._oSupplier;
+			oData = this.viewData;
 
 			oModel.setData(oData);
 			this._toggleButtonsAndView(false);
@@ -145,7 +192,7 @@ sap.ui.define([
 		},
 
 		handleSavePress : function () {
-
+			this.publData = JSON.parse(JSON.stringify(this.viewData))
 			this._toggleButtonsAndView(false);
 
 		},
@@ -160,7 +207,8 @@ sap.ui.define([
 			oView.byId("del").setVisible(!bEdit);
 
 			// Set the right form type
-			this._showFormFragment(bEdit ? "Change" : "Display");
+			this.viewType = bEdit ? "Change" : "Display"
+			this._showFormFragment(this.viewType);
 			
 		},
 
@@ -169,66 +217,70 @@ sap.ui.define([
 		_getFormFragment: function (sFragmentName) {
 			var oFormFragment = this._formFragments[sFragmentName];
 
-			if (!oFormFragment) {
-				var oChangeFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + "Change");
-				this._formFragments["Change"] = oChangeFragment;
-				this.getView().addDependent(oChangeFragment);
+			if (oFormFragment) {
+				
+				var oPage = this.byId("page");
+				oPage.insertContent(this._formFragments[sFragmentName]);
 
-				var oDisplayFragment = sap.ui.xmlfragment(this.getView().getId(), Utils.nameSpaceHandler("view.publicacion.") + "Display");
-				this._formFragments["Display"] = oDisplayFragment;
-				this.getView().addDependent(oDisplayFragment);
-
-				return this._formFragments[sFragmentName];
-
-			} else {
 				return oFormFragment;
 			}
+
+			Fragment.load({
+				id: this.getView().getId(),
+				name: Utils.nameSpaceHandler("view.publicacion.") + sFragmentName,
+				controller: this
+			}).then(function(oFragment){
+				this._formFragments[sFragmentName] = oFragment;
+				this._formFragments[sFragmentName];
+				
+				var oPage = this.byId("page");
+				oPage.insertContent(this._formFragments[sFragmentName]);
+
+			}.bind(this))
 		},
 
 		_showFormFragment : function (sFragmentName) {
 			var oPage = this.byId("page");
 
 			oPage.removeAllContent();
-			oPage.insertContent(this._getFormFragment(sFragmentName));
+
+			this._getFormFragment(sFragmentName);
+			//oPage.insertContent(this._getFormFragment(sFragmentName));
 		},
 
 		//IMG UPLOAD FUNCTIONS
 		imageUploaderInit: function (data) {
 			console.log('imgupload init');
 			console.log(data);
-
+			
 			var uploadController = this.getView().byId("uploadset"),
-				mainfolder = data["publicacion"]["mainfolder"];
-
-/*
-			//Create attributes of the picture
-			for (var i = 0; i < data["publicacion"]["pictures"].length; i++) {
+				orderController = this.getView().byId("imgorderlist");
 				
-				data["publicacion"]["pictures"][i]["attributes"] = 
-					{
-					"id":data["publicacion"]["pictures"][i]["id"],
-					"order":data["publicacion"]["pictures"][i]["orden"],
-					"type":data["publicacion"]["pictures"][i]["filetype"]					
-					}
-			}
-*/
+				this.mainFolder = data["mainfolder"];
+
 			//Create order Select List based on number of pictures available
-			var picturesCount = data["publicacion"]["pictures"].length,
+			var picturesCount = data["pictures"].length,
 				selectArray = [];
 				
 			selectArray.push({"key": 0, "text": ""}) ;
 
 			for (var i = 0; i < picturesCount; i++) {
 				selectArray.push({"key": i+1, "text": (i+1).toString()});
-				data["publicacion"]["pictures"][i]["orderselect"] = selectArray;
+				data["pictures"][i]["orderselect"] = selectArray;
 			}
 
-			var dataModel = new JSONModel(data);
-			uploadController.setModel(dataModel);
-			uploadController.setUploadUrl(mainfolder);
+			var dataModel = new JSONModel(data["pictures"]);
+			
+			uploadController.setModel(dataModel)
+			orderController.setModel(dataModel);
+			uploadController.setUploadUrl("/publicaciones/images/"+encodeURIComponent(encodeURIComponent(this.mainFolder)));
 
 			//Attach event handler functions
-			uploadController.attachAfterItemAdded(function() {
+			uploadController.attachAfterItemAdded(function(ev) {
+				// orderController = this.getView().byId("imgorderlist");
+				// orderController.getModel().getData();
+
+				//CHeck if file name or path has "_" in it and request to remove
 
 			}.bind(this));
 			
@@ -240,14 +292,34 @@ sap.ui.define([
 
 			}.bind(this));
 			
-			uploadController.attachBeforeUploadStarts(function() {
+			uploadController.attachBeforeUploadStarts(function(ev) {
+				var oUploader = this.getView().byId("uploadset"),
+					oItemName = ev.getParameter("item").getFileName();
+
+				
+					if (!oUploader.getHeaderFields().length > 0) {
+						this.headerFileName = new sap.ui.core.Item({id:"idFileNameHeader",key:"File-Name-Header",text:oItemName});
+						oUploader.addHeaderField(this.headerFileName);
+					} else {
+						//oUploader.getHeaderFields()[oUploader.indexOfHeaderField(this.headerFileName)].setText(oItemName)
+						this.headerFileName.setText(oItemName);
+					}
+
+				console.log(oUploader.getUploadUrl());
+				console.log(oItemName);
 
 			}.bind(this));
 
-			uploadController.attachUploadCompleted(function() {
-
+			uploadController.attachUploadCompleted(function(ev) {
+				console.log("completed");
 			}.bind(this));
 			
+		},
+
+		onpressupload: function() {
+			console.log("Test button");
+			var uploadController = this.getView().byId("uploadset");
+			uploadController.upload();
 		},
 
 		onExit: function() {

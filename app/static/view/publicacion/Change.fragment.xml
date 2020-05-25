@@ -120,19 +120,20 @@
 			columnsM="2"
 			singleContainerFullSize="false" >
 			<f:content>
-            <core:Title/>
-
+            <core:Title text="Carga"/>
 				<upload:UploadSet
 					id="uploadset"
-					instantUpload="false"
+					instantUpload="true"
 					showIcons="false"
 					uploadEnabled="true"
 					fileTypes="jpeg,png,jpg"
 					maxFileNameLength="30"
-					maxFileSize="3"
-					mediaTypes="image/jpeg,image/png,image/jpg"
-					uploadUrl="static/media/images"
-					items="{path: '/publicacion/pictures', templateShareable: false}">
+					maxFileSize="10000"
+					mediaTypes="image/jpeg,image/png,image/jpg" 
+					uploadUrl="/publicaciones/images/upload"
+					items="{path: '/', 
+							sorter:{ path: 'orden' },
+							templateShareable: false}">
 					<upload:items>
 						<upload:UploadSetItem
 								fileName="{filename}"
@@ -145,12 +146,14 @@
 					</upload:items>
 				</upload:UploadSet>
 			
-			<core:Title text="Prioridad de las imagenes"/>
+			<core:Title text="Prioridad"/>
 			<VBox>
 				<VBox>
 					<Toolbar height="3rem" design="Transparent" />
 				</VBox>
-				<VBox items="{path:'/publicacion/pictures', sorter:{ path: 'orden' }}">
+				<VBox	id="imgorderlist" 
+						items="{path:'/',
+								sorter:{ path: 'orden' }}">
 					<items>
 					<Toolbar height="100%" design="Info" >
 						<Image src="{source}" width="10%" />
@@ -159,7 +162,7 @@
 						<Text text="Orden" />
 						<Select	forceSelection="false"
 								selectedKey="{orden}" 
-								items="{orderselect}">
+								items="{path:'orderselect', templateShareable: false}">
 
 							<core:Item key="{key}" text="{text}" />
 						</Select>

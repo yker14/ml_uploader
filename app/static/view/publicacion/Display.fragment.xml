@@ -101,7 +101,7 @@
 
 	<Title text="" />
 	
-	<Carousel class="sapUiContentPadding" loop="true" pages="{pictures}">
+	<Carousel id="idcarousel" class="sapUiContentPadding" loop="true" pages="{/pictures}">
 		<pages>
 			<Image src="{source}" alt="{orden}"/>
 		</pages>
