@@ -5,8 +5,9 @@ sap.ui.define([
     'sap/ui/core/UIComponent',
 	'sap/base/security/encodeURL',
 	'rshub/ui/libs/custom/RouterContentHelper',
-	'sap/ui/core/Fragment'
-], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper, Fragment) {
+	'sap/ui/core/Fragment',
+	'rshub/ui/libs/custom/ImageRequest'
+], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper, Fragment, ImageRequestor) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicacion"), {
@@ -16,6 +17,7 @@ sap.ui.define([
 		publData : {},
 		publicId : null,
 		publImg : {},
+		uploadCounter: 0,
 		mainFolder : null,
 		headerFileName: null,
 
@@ -76,7 +78,7 @@ sap.ui.define([
 			  }.bind(this));
 			  
 			// Request publication images
-
+/*
 			var imgResp = $.ajax({
 				url: '/publicaciones/images/request/'+publId,
 				datatype : "application/json",
@@ -106,6 +108,21 @@ sap.ui.define([
                 }.bind(this))
     
 			  }.bind(this));
+*/
+
+			ImageRequestor.getImages(publId).then(function(p) {
+                this.publImg = p;
+				this.oImgModel = new JSONModel(this.publImg, true);
+				
+                //Set the model data to display
+                Promise.all([this.oImgModel]).then(function(values) {
+					var oCarousel = this.getView().byId("idcarousel");
+					oCarousel.setModel(values[0]);
+					oCarousel.updateBindings(true);
+					
+            	}.bind(this))
+    
+			}.bind(this));
 
 			// Set the initial form to be the display one
 			this._showFormFragment(this.viewType);
@@ -120,6 +137,31 @@ sap.ui.define([
 			sap.ui.core.BusyIndicator.hide()
 		},
 		
+		handlePublishPress: function() {
+			var publId = this.publicId;
+
+			var resp = $.ajax({
+				url: '/publicaciones/'+publId+'/publicar',
+				datatype : "application/json",
+				type: "POST",
+				success: function(result) {
+					return result;
+				},
+
+				error: function(error) {
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+error, {
+						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+						emphasizedAction: "OK"
+					});
+				}
+			});
+			
+			resp.then(function() {
+				sap.m.MessageBox.success("Publicacion en MercadoLibre exitoso.\n"+resp.responseText);
+
+			});
+		},
+
         handleEditPress: function () {
 
 			//Clone the data
@@ -277,10 +319,12 @@ sap.ui.define([
 
 			//Attach event handler functions
 			uploadController.attachAfterItemAdded(function(ev) {
-				// orderController = this.getView().byId("imgorderlist");
-				// orderController.getModel().getData();
 
-				//CHeck if file name or path has "_" in it and request to remove
+				//VALIDATE IF THE FILE UPLOADED HAS A DUPLICATED NAME FROM THE LIST
+				orderController = this.getView().byId("imgorderlist");
+				orderController.getModel().getData();
+				
+				//CHeck if file name or path has "_" in it and request to remove	
 
 			}.bind(this));
 			
@@ -292,6 +336,10 @@ sap.ui.define([
 
 			}.bind(this));
 			
+			uploadController.attachBeforeUploadTermination(function() {
+				console.log("upload bout to be terminated")
+			}.bind(this));
+
 			uploadController.attachBeforeUploadStarts(function(ev) {
 				var oUploader = this.getView().byId("uploadset"),
 					oItemName = ev.getParameter("item").getFileName();
@@ -312,6 +360,38 @@ sap.ui.define([
 
 			uploadController.attachUploadCompleted(function(ev) {
 				console.log("completed");
+				
+				/*
+				var orderController = this.getView().byId("imgorderlist"),
+					uploadController = ev.getSource(),
+					itemUploaded = ev.getParameter("item"),
+					itemUrl = this.mainFolder + "/" + itemUploaded.getFileName(),
+			
+					oItem = new sap.m.upload.UploadSetItem({
+						fileName: itemUploaded.getFileName(),
+						mediaType: itemUploaded.getMediaType(),
+						url: itemUrl, 
+						thumbnailUrl: itemUrl
+					});
+				
+				uploadController.insertItem(oItem);
+				*/
+				this.uploadCounter += 1
+
+				//Request images again if no items pending to be uploaded
+				if (ev.getSource().getIncompleteItems().length==this.uploadCounter) {
+					//uploadController.removeAllIncompleteItems();
+					//uploadController.removeAllItems();
+					uploadController.destroyIncompleteItems();
+					uploadController.destroyItems();
+
+					this.uploadCounter = 0;
+
+					ImageRequestor.getImages(this.publicId).then(function(p) {
+							this.publImg = p;
+							this.imageUploaderInit(this.publImg);
+						}.bind(this));
+				}
 			}.bind(this));
 			
 		},

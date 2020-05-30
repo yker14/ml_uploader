@@ -12,6 +12,7 @@
 				</contentLeft>
 				<contentRight>
 					<Button id="edit" text="Editar" press="handleEditPress" />
+					<Button id="publish" text="Publicar en MercadoLibre" press="handlePublishPress" />
 					<Button id="del" text="Borrar Publicacion" press="handleDeletePress" />
 					<Button id="save" text="Guardar" type="Emphasized" visible="false" press="handleSavePress" />
 					<Button id="cancel" text="Cancelar" visible="false" press="handleCancelPress" />

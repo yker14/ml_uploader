@@ -137,11 +137,19 @@ def imgupdate(mainfolder):
     fileName = request.headers.get("File-Name-Header")
 
     with open("./app/"+folder+"/"+fileName,"wb") as f:
-        f.write(request.get_data()) 
+        f.write(fileContent) 
 
     
 
-    return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName),200)
+    return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)
+
+@app.route('/publicaciones/<publ_id>/publicar', methods=['POST'])
+def publish(publ_id):
+    
+
+    
+
+    return ('Successfully published '+publ_id, 200)
 
 
 if __name__ == '__main__':
