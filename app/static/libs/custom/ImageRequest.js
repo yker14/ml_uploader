@@ -26,6 +26,37 @@ sap.ui.define([
             });
 
             return imgResp;
-        }
+        },
+
+        getReader : function(file) {
+
+            var reader = new FileReader();
+					
+            reader.onerror = function (e) {
+                sap.m.MessageBox.warning("Error al leer la imagen.\n" + JSON.stringify(e), {
+                    actions: [sap.m.MessageBox.Action.CLOSE]
+                });
+            };
+
+            reader.onloadend = function() {
+                var tempImg = new Image();
+                tempImg.src = reader.result;
+                tempImg.onload = function() {
+                    
+                    var dataURL = tempImg.src;
+                    var BASE64_MARKER = 'data:' + file.type + ';base64,';
+                    var base64Index = dataURL.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+                    var base64string = dataURL.split(",")[1];
+
+                    console.log(base64string);
+                    return base64string;
+                }
+            };
+
+            reader.readAsDataURL(file);
+
+            return reader;
+        },
+
     };
 });

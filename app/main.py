@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, request
 from urllib.parse import unquote
 #import requests
@@ -119,6 +120,30 @@ def imgreq(publ_id):
                     "filetype":"png",
                     "source":"static/media/images/darksouls/screenshot.png",
                     "orden":"1"
+                    },
+                    {
+                    "id":"56565656",
+                    "folder":"static/media/images/darksouls",
+                    "filename":"Woman_04.png",
+                    "filetype":"png",
+                    "source":"static/media/images/darksouls/Woman_04.png",
+                    "orden":"3"
+                    },
+                    {
+                    "id":"543535245",
+                    "folder":"static/media/images/darksouls",
+                    "filename":"screenshot1.png",
+                    "filetype":"png",
+                    "source":"static/media/images/darksouls/screenshot1.png",
+                    "orden":"4"
+                    },
+                    {
+                    "id":"45674848",
+                    "folder":"static/media/images/darksouls",
+                    "filename":"screenshot2.png",
+                    "filetype":"png",
+                    "source":"static/media/images/darksouls/screenshot2.png",
+                    "orden":"5"
                     }]
             }
 
@@ -131,23 +156,44 @@ def imgupdate(mainfolder):
     
     fileType = request.content_type.split('/')[1]
     fileContent = request.get_data()
-    
+
     #Decode the Path in mainfolder (same as Source)
     folder = unquote(mainfolder)
     fileName = request.headers.get("File-Name-Header")
-
+    fileOrder = request.headers.get("File-Order-Header")
+    
     with open("./app/"+folder+"/"+fileName,"wb") as f:
         f.write(fileContent) 
 
-    
-
     return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)
+
+@app.route('/publicaciones/images/delete/<mainfolder>', methods=['GET','POST'])
+def imgdelete(mainfolder):
+    
+    try:
+        fileType = request.content_type.split('/')[1]
+        fileContent = request.get_data()
+
+        #Decode the Path in mainfolder (same as Source)
+        folder = unquote(mainfolder)
+        fileName = request.headers.get("File-Name-Header")
+        fullpath = "./app/"+folder+"/"+fileName
+
+        if os.path.exists(fullpath):
+            os.remove(fullpath)
+        else:
+            print("The file does not exist: " + fullpath)
+            raise Exception("The file does not exist: " + fullpath)
+            
+        return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)
+
+    except Exception as e:
+
+        return ('A problem occurred while processing the request. \n Error Message: {}'.format(e.args), 400)
+ 
 
 @app.route('/publicaciones/<publ_id>/publicar', methods=['POST'])
 def publish(publ_id):
-    
-
-    
 
     return ('Successfully published '+publ_id, 200)
 

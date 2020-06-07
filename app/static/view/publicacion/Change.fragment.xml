@@ -131,7 +131,7 @@
 					maxFileSize="10000"
 					mediaTypes="image/jpeg,image/png,image/jpg" 
 					uploadUrl="/publicaciones/images/upload"
-					items="{path: '/', 
+					items="{path: '/pictures', 
 							sorter:{ path: 'orden' },
 							templateShareable: false}">
 					<upload:items>
@@ -152,7 +152,7 @@
 					<Toolbar height="3rem" design="Transparent" />
 				</VBox>
 				<VBox	id="imgorderlist" 
-						items="{path:'/',
+						items="{path:'/pictures',
 								sorter:{ path: 'orden' }}">
 					<items>
 					<Toolbar height="100%" design="Info" >
@@ -161,7 +161,8 @@
 						<ToolbarSpacer/>
 						<Text text="Orden" />
 						<Select	forceSelection="false"
-								selectedKey="{orden}" 
+								selectedKey="{orden}"
+								change="onOrderChg"
 								items="{path:'orderselect', templateShareable: false}">
 
 							<core:Item key="{key}" text="{text}" />
