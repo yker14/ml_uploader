@@ -11,8 +11,8 @@ sap.ui.define([
 
             var imgResp = $.ajax({
                 url: '/publicaciones/images/request/'+publId,
-                datatype : "application/json",
-                type: "GET",
+                datatype :'application/json',
+                type: 'GET',
                 success: function(result) {
                     return result;
                 },
@@ -57,6 +57,7 @@ sap.ui.define([
 
             return reader;
         },
+
 
     };
 });

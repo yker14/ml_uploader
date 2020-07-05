@@ -105,7 +105,7 @@
 		<f:SimpleForm id="simpleformImages"
 			editable="true"
 			layout="ResponsiveGridLayout"
-			title="Imagenes"
+			title="Imagenes (los cambios a las imagenes no se pueden reversar)"
 			labelSpanXL="4"
 			labelSpanL="4"
 			labelSpanM="4"
@@ -121,7 +121,7 @@
 			singleContainerFullSize="false" >
 			<f:content>
             <core:Title text="Carga"/>
-				<upload:UploadSet
+				<!-- <upload:UploadSet
 					id="uploadset"
 					instantUpload="true"
 					showIcons="false"
@@ -141,10 +141,20 @@
 								url="{source}"
 								thumbnailUrl="{source}"
 								uploadState="Complete">
-
+							
 						</upload:UploadSetItem>
 					</upload:items>
-				</upload:UploadSet>
+				</upload:UploadSet> -->
+				<upload:UploadSet
+					id="uploadset"
+					instantUpload="true"
+					showIcons="false"
+					uploadEnabled="true"
+					fileTypes="jpeg,png,jpg"
+					maxFileNameLength="30"
+					maxFileSize="10000"
+					mediaTypes="image/jpeg,image/png,image/jpg" 
+					uploadUrl="/publicaciones/images/upload" />
 			
 			<core:Title text="Prioridad"/>
 			<VBox>

@@ -1,0 +1,29 @@
+{
+    "mainfolder": "static/media/images/darksouls",
+    "pictures": [
+        {
+            "id": "9342567",
+            "folder": "static/media/images/darksouls",
+            "filename": "screenshot.png",
+            "filetype": "png",
+            "source": "static/media/images/darksouls/screenshot.png",
+            "orden": "1"
+        },
+        {
+            "id": "2020-06-18 20:04:33.714011",
+            "folder": "static/media/images/darksouls",
+            "filename": "darksouls2.jpg",
+            "filetype": "jpg",
+            "source": "static/media/images/darksouls/darksouls2.jpg",
+            "orden": "2"
+        },
+        {
+            "id": "2020-07-01 23:18:43.019606",
+            "folder": "static/media/images/darksouls",
+            "filename": "Woman_04.png",
+            "filetype": "png",
+            "source": "static/media/images/darksouls/Woman_04.png",
+            "orden": "3"
+        }
+    ]
+}

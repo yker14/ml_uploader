@@ -1,4 +1,6 @@
 import os
+import json
+import datetime
 from flask import Flask, jsonify, request
 from urllib.parse import unquote
 #import requests
@@ -102,52 +104,10 @@ def update(publ_id):
 @app.route('/publicaciones/images/request/<publ_id>')
 def imgreq(publ_id):
     
-    data = {
-        "mainfolder": "static/media/images/darksouls",
-        "pictures": [
-                    {
-                    "id":"12356",
-                    "folder":"static/media/images/darksouls",
-                    "filename":"darksouls.jpg",
-                    "filetype":"jpg",
-                    "source":"static/media/images/darksouls/darksouls.jpg",
-                    "orden":"2"
-                    },
-                    {
-                    "id":"9342567",
-                    "folder":"static/media/images/darksouls",
-                    "filename":"screenshot.png",
-                    "filetype":"png",
-                    "source":"static/media/images/darksouls/screenshot.png",
-                    "orden":"1"
-                    },
-                    {
-                    "id":"56565656",
-                    "folder":"static/media/images/darksouls",
-                    "filename":"Woman_04.png",
-                    "filetype":"png",
-                    "source":"static/media/images/darksouls/Woman_04.png",
-                    "orden":"3"
-                    },
-                    {
-                    "id":"543535245",
-                    "folder":"static/media/images/darksouls",
-                    "filename":"screenshot1.png",
-                    "filetype":"png",
-                    "source":"static/media/images/darksouls/screenshot1.png",
-                    "orden":"4"
-                    },
-                    {
-                    "id":"45674848",
-                    "folder":"static/media/images/darksouls",
-                    "filename":"screenshot2.png",
-                    "filetype":"png",
-                    "source":"static/media/images/darksouls/screenshot2.png",
-                    "orden":"5"
-                    }]
-            }
+    with open("./app/static/model/images.json") as f:
+        data = json.load(f)
 
-    return (data,200)
+    return (json.dumps(data),200)
 
 
 
@@ -162,29 +122,63 @@ def imgupdate(mainfolder):
     fileName = request.headers.get("File-Name-Header")
     fileOrder = request.headers.get("File-Order-Header")
     
+    #Create image in given folder with given name
     with open("./app/"+folder+"/"+fileName,"wb") as f:
         f.write(fileContent) 
 
+    #Write to file
+    with open("./app/static/model/images.json") as j:
+        data = json.load(j)
+    
+        #Create image data for database
+        nData = {
+            "id":str(datetime.datetime.now()),
+            "folder":"static/media/images/darksouls",
+            "filename":fileName,
+            "filetype":fileType,
+            "source":folder+"/"+fileName,
+            "orden":str(int(data["pictures"][len(data["pictures"])-1]["orden"])+1)
+            }
+
+        data["pictures"].append(nData)
+        print(data)
+
+    with open("./app/static/model/images.json", "w+") as j:
+        json.dump(data, j, ensure_ascii=False, indent=4)
+
+
+
     return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)
 
-@app.route('/publicaciones/images/delete/<mainfolder>', methods=['GET','POST'])
+@app.route('/publicaciones/images/delete/<mainfolder>', methods=['POST'])
 def imgdelete(mainfolder):
     
     try:
-        fileType = request.content_type.split('/')[1]
-        fileContent = request.get_data()
-
         #Decode the Path in mainfolder (same as Source)
         folder = unquote(mainfolder)
         fileName = request.headers.get("File-Name-Header")
-        fullpath = "./app/"+folder+"/"+fileName
+        fullpath = "./app/{}/{}".format(folder,fileName)
 
         if os.path.exists(fullpath):
             os.remove(fullpath)
         else:
             print("The file does not exist: " + fullpath)
             raise Exception("The file does not exist: " + fullpath)
+        
+        
+        #Update file
+        with open("./app/static/model/images.json") as j:
+            data = json.load(j)
+
+            for i in range(0,len(data["pictures"])):
+                if data["pictures"][i]["filename"] == fileName:
+                    data["pictures"].pop(i)
+                    
             
+        with open("./app/static/model/images.json", "w+") as j:
+            json.dump(data, j, ensure_ascii=False, indent=4)
+        #
+
         return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)
 
     except Exception as e:
@@ -194,9 +188,11 @@ def imgdelete(mainfolder):
 
 @app.route('/publicaciones/<publ_id>/publicar', methods=['POST'])
 def publish(publ_id):
+    try:
+        return ('Successfully published '+publ_id, 200)
 
-    return ('Successfully published '+publ_id, 200)
-
+    except Exception as e:
+        return ('A problem occurred while processing the request. \n Error Message: {}'.format(e.args), 400)
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='localhost', port=8080, debug=True)

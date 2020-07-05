@@ -17,7 +17,7 @@ sap.ui.define([
 		viewType : "Display",
 		publData : {},
 		publicId : null,
-		publImg : {mainfolder:null, pictures: [], idnamematch: {}},
+		publImg : {},
 		imgModel: null,
 		uploadCounter: 0,
 		mainFolder : null,
@@ -25,9 +25,8 @@ sap.ui.define([
 		headerFileOrder: null,
 		deleteImgContainer: [],
 		addImgContainer: [],
+		removedItems: [],
 		orderCount: 0,
-		uploadController: null,
-		orderController: null,
 
 		onInit : function() {
 		
@@ -46,11 +45,13 @@ sap.ui.define([
 				this._formFragments[sPropertyName] = null;
 				
 				//Delete images that were uploaded but not saved.
-				//this.deleteImages(this.addImgContainer);
+				this.deleteImages(this.addImgContainer);
 			}	
 		},
 
         _onRouteMatched: function(ev) {
+			//sap.ui.core.BusyIndicator.show();
+
 			// Set the initial form to be the display one
 			this.viewType = "Display";
 			this._toggleButtonsAndView(false);
@@ -60,8 +61,22 @@ sap.ui.define([
 				publId = urlParams.get("publId");
 				this.publicId = publId;
 
-			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId, "GET", null);
+            var resp = $.ajax({
+				url: '/publicaciones/'+publId,
+				datatype : "application/json",
+                type: "GET",
+                success: function(result) {
+                    return result;
+                },
 
+                error: function(error) {
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n" + JSON.stringify(error), {
+						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+						emphasizedAction: "OK"
+					});
+                }
+            });
+            
             resp.then(function() {
                 this.publData = JSON.parse(resp.responseText);
 				this.oModel = new JSONModel(this.publData, true);
@@ -80,15 +95,25 @@ sap.ui.define([
 			var imgResp = ImageRequestor.getImages(publId);
 
 			imgResp.then(function() {
-
-				this.setImgData(Object.assign({},JSON.parse(imgResp.responseText)));
-
+				this.publImg = Object.assign({},JSON.parse(imgResp.responseText));
 				this.imgModel = new JSONModel(this.publImg);
 
 				this.imgModel.attachPropertyChange(function (ev) {
-					//REFRESH IMAGE ORDER CONTROLLER ITEMS					
-					this.orderController.getModel().refresh();
+					//REFRESH IMAGE ORDER CONTROLLER ITEMS
+					if (ev.getParameter("path") == "filename") {
+						//OLD NAME
+						var oldName = this.changedNameItem.name,
+						//NEW NAME
+							nName = ev.getParameter("value"),
+						//ORDER
+							oldOrder = this.publImg.orderlist[oldName];
 
+						//ADD NEW NAME TO THE ORDER LIST
+						this.publImg.orderlist[nName] = oldOrder;
+
+						//DELETE OLD NAME FORM THE ORDER LIST
+						delete this.publImg.orderlist[oldName];						
+					}
 				}.bind(this));
 
 				var oCarousel = this.getView().byId("idcarousel");
@@ -109,8 +134,22 @@ sap.ui.define([
 		handlePublishPress: function() {
 			var publId = this.publicId;
 
-			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/publicar', "POST", null);
-	
+			var resp = $.ajax({
+				url: '/publicaciones/'+publId+'/publicar',
+				datatype : "application/json",
+				type: "POST",
+				success: function(result) {
+					return result;
+				},
+
+				error: function(error) {
+					sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+error, {
+						actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+						emphasizedAction: "OK"
+					});
+				}
+			});
+			
 			resp.then(function() {
 				sap.m.MessageBox.success("Publicacion en MercadoLibre exitoso.\n"+resp.responseText);
 
@@ -140,9 +179,32 @@ sap.ui.define([
 			sap.m.MessageBox.warning("Se eliminara esta publicacion de la base de datos y de Mercadolibre. ¿Desea continuar?", {
 				actions: ["Aceptar", sap.m.MessageBox.Action.CLOSE],
 				emphasizedAction: sap.m.MessageBox.Action.CLOSE,
-				onClose: function () {
+				onClose: function (sAction) {
+					
+					if (sAction=="Aceptar") {
+
+						var resp = $.ajax({
+							url: '/publicaciones/'+publId+'/delete',
+							datatype : "application/json",
+							type: "POST",
+							success: function(result) {
+								return result;
+							},
+			
+							error: function(error) {
+								sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+error, {
+									actions: ["OK", sap.m.MessageBox.Action.CLOSE],
+									emphasizedAction: "OK"
+								});
+							}
+						});
+						
+						resp.then(function() {
 							sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
-						}.bind(this)
+
+						}.bind(this));
+					}
+				}.bind(this)
 			});
 
 			this.handleBackPress();
@@ -159,7 +221,7 @@ sap.ui.define([
 		handleCancelPress : function () {
 
 			//DELETE SAVED IMAGES
-			//this.deleteImages(this.addImgContainer);
+			this.deleteImages(this.addImgContainer);
 
 			//Restore the data
 			var oModel = this.getView().getModel();
@@ -201,11 +263,10 @@ sap.ui.define([
 			try {
 				//DELETE IMAGES REQUESTED TO BE DELETED
 				
-				// if (this.deleteImages(this.deleteImgContainer)) {
-				// 	saveChecklist.deleteImages = true;
-				// }
+				if (this.deleteImages(this.deleteImgContainer)) {
+					saveChecklist.deleteImages = true;
+				}
 
-				saveChecklist.deleteImages = true;
 				saveChecklist.addImages = true;
 
 				//FIELD VALUES SAVE
@@ -264,11 +325,6 @@ sap.ui.define([
 
 				var oPage = this.byId("page");
 				oPage.insertContent(this._formFragments[sFragmentName]);
-				
-				if (this.viewType == "Change") {
-					this.uploadController = this.getView().byId("uploadset");
-					this.orderController = this.getView().byId("imgorderlist");
-				}
 
 			}.bind(this))
 		},
@@ -281,7 +337,14 @@ sap.ui.define([
 			this._getFormFragment(sFragmentName);
 		},
 
-		setOrderData: function () {
+		//IMG UPLOAD FUNCTIONS
+		imageUploaderInit: function (update=false) {
+			console.log('imgupload init');
+			console.log(this.publImg);
+			
+			var uploadController = this.getView().byId("uploadset"),
+				orderController = this.getView().byId("imgorderlist");
+				
 			//Create order Select List based on number of pictures available
 			this.publImg["orderlist"] = {};
 
@@ -299,43 +362,35 @@ sap.ui.define([
 			}
 
 			this.orderCount = selectArray.length - 1;
-		},
-
-		setImgData: function(p) {
 			
-			this.publImg.mainfolder = p.mainfolder;
-			this.publImg.pictures = p.pictures;
-			this.publImg.idnamematch = {};
+			if (update) {
+				
+				uploadController.updateBindings(true);
+				orderController.updateBindings(true);
+				uploadController.getModel().refresh();
+				orderController.getModel().refresh();
 
-		},
+			} else {
 
-		imageUploaderUpdate: function() {
-			var uploadController = this.getView().byId("uploadset"),
-			orderController = this.getView().byId("imgorderlist");
 
-			//uploadController.removeAllIncompleteItems();
+				
+				if(!uploadController.getModel() && !orderController.getModel()) {
+					
+					uploadController.setModel(this.imgModel);
+					orderController.setModel(this.imgModel);
 
-			uploadController.updateBindings(true);
-			orderController.updateBindings(true);
-			uploadController.getModel().refresh();
-			orderController.getModel().refresh();
-		},
-
-		//IMG UPLOAD FUNCTIONS
-		imageUploaderInit: function () {
-			
-			var uploadController = this.getView().byId("uploadset"),
-				orderController = this.getView().byId("imgorderlist");
-
-			//Reload Upload Controller Items
-			this.reloadUploaderItems();
-
-			this.mainFolder = this.publImg["mainfolder"];
-			uploadController.setUploadUrl("/publicaciones/images/"+encodeURIComponent(encodeURIComponent(this.mainFolder)));
-			uploadController.getDefaultFileUploader().setMultiple(true);
-
-			this.deleteImgContainer = [];
-			this.addImgContainer = [];
+					this.mainFolder = this.publImg["mainfolder"];
+					uploadController.setUploadUrl("/publicaciones/images/"+encodeURIComponent(encodeURIComponent(this.mainFolder)));
+					uploadController.getDefaultFileUploader().setMultiple(true);
+				} else {
+					uploadController.updateBindings(true);
+					orderController.updateBindings(true);
+					uploadController.getModel().refresh();
+					orderController.getModel().refresh();
+				}
+				
+				this.deleteImgContainer = [];
+				this.addImgContainer = [];
 
 /*************************
 * 	TO BE IMPLEMENTED. 
@@ -358,24 +413,36 @@ sap.ui.define([
 
 			//Attach event handler functions
 				uploadController.attachAfterItemAdded(function(ev) {
+
+					
 					orderController = this.getView().byId("imgorderlist");
 					orderController.getModel().getData();
-					this.addImgContainer.push(`${this.mainFolder}/${ev.getParameter("item").getFileName()}`);
+					
+					this.addImgContainer.push(ev.getParameter("item"));
+
+					//REMOVE ITEMS THAT ARE IN removedItems container (duplicate names)
+					for (var i=0; i < this.removedItems.length; i++) {
+						this.removedItems[i].fireRemovePressed();
+					}
+
+					//VALIDATE IF THE FILE UPLOADED HAS A DUPLICATED NAME FROM THE LIST
+
+				}.bind(this));
+				
+				uploadController.attachBeforeItemEdited(function(ev) {
+					console.log(ev);
+
+					this.changedNameItem = {
+						name: ev.getParameter("item").getFileName(),
+						item: ev.getParameter("item")
+					};
+
 				}.bind(this));
 				
 				uploadController.attachBeforeItemRemoved(function(ev) {
 					console.log("item bout to be removed");
-					console.log(ev.getParameter("item").getUrl());
 					this.deleteImgContainer.push(ev.getParameter("item").getUrl());
-
-					//LOOP THORUGH publImg's pictures and idnamematch and delete the properties
-
-					//RELOAD ordercontroller
-
-					// if(this.deleteImages(this.deleteImgContainer)) {
-					// 	this.reloadUploaderItems();
-					// }					
-
+					
 				}.bind(this));
 
 				uploadController.attachBeforeItemAdded(function(ev) {
@@ -389,8 +456,10 @@ sap.ui.define([
 								actions: [sap.m.MessageBox.Action.CLOSE]
 							});
 
-							//Throws new error so the attachment of the file never occurs.
-							throw new Error("Upload terminated due to duplicated name");
+							this.removedItems.push(ev.getParameter("item"));
+							
+							break;
+
 						}
 					}
 
@@ -398,8 +467,7 @@ sap.ui.define([
 
 				uploadController.attachBeforeUploadStarts(function(ev) {
 					var oUploader = ev.getSource(),
-						oItemName = ev.getParameter("item").getFileName(),
-						oItemId = this.publImg.idnamematch[oItemName];
+						oItemName = ev.getParameter("item").getFileName();
 
 					
 						if (!oUploader.getHeaderFields().length > 0) {
@@ -409,8 +477,8 @@ sap.ui.define([
 							this.headerFileOrder = new sap.ui.core.Item({id:"idFileOrderHeader",key:"File-Order-Header",text:this.orderCount+1});
 							oUploader.addHeaderField(this.headerFileOrder);
 
-							this.headerFileId = new sap.ui.core.Item({id:"idFileIDHeader",key:"File-ID-Header",text:oItemId});
-							oUploader.addHeaderField(this.headerFileId);
+							// this.headerFileName = new sap.ui.core.Item({id:"idFileIDHeader",key:"File-ID-Header",text:oItemName});
+							// oUploader.addHeaderField(this.headerFileName);
 
 							this.orderCount += 1;
 
@@ -456,53 +524,14 @@ sap.ui.define([
 						console.log("uploaded image");
 
 						p.then(function() {
-								this.setImgData(Object.assign({},JSON.parse(p.responseText)));
-								
-								//this.imageUploaderUpdate();
-								this.reloadUploaderItems();	
-								orderController.getModel().refresh();
-
+								this.publImg.pictures = JSON.parse(p.responseText).pictures;
+								this.imageUploaderInit(true);
 								console.log("updated images");
 							}.bind(this));
 					}
 				}.bind(this));
-			
-			
-		},
-
-		reloadUploaderItems : function() {
-			//Reload the contents of the upload set controller
-
-			var uploadController = this.getView().byId("uploadset"),
-				orderController = this.getView().byId("imgorderlist"),
-				itemSettings = {},
-				uploadItem;
-
-			this.currentImgItems = {};
-			uploadController.destroyItems();
-			uploadController.destroyIncompleteItems();
-
-			for (var i = 0; i < this.publImg.pictures.length; i++) {
-				itemSettings = {
-					fileName: this.publImg.pictures[i].filename,
-					mediaType: `image/${this.publImg.pictures[i].filetype}`,
-					url: this.publImg.pictures[i].source,
-					thumbnailUrl: this.publImg.pictures[i].source,
-					uploadState: "Complete",
-					enabledEdit: false,
-					visibleEdit: false
-				};
-				
-				uploadItem = new sap.m.upload.UploadSetItem(itemSettings);
-
-				uploadController.addItem(uploadItem);
-				this.publImg.idnamematch[this.publImg.pictures[i].fileName] = this.publImg.pictures[i].id;				
 			}
-
-			//Reload Order Controller
-			this.setOrderData();
-			(orderController.getModel()) ? orderController.getModel().refresh() : orderController.setModel(this.imgModel);
-
+			
 		},
 
 		onOrderChg: function(ev) {
@@ -541,7 +570,6 @@ sap.ui.define([
 			this.publImg.orderlist[chgImgName] = nOrder;
 			this.publImg.orderlist[srchName] = prevOrder;
 		}
-
 	});
 
 	return CController;
