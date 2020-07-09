@@ -8,8 +8,9 @@ sap.ui.define([
 	'sap/m/library',
 	'sap/ui/core/routing/History',
 	'sap/ui/core/UIComponent',
-    'rshub/ui/libs/custom/RouterContentHelper'
-], function (Controller, JSONModel, MessageBox, Utils, Popover, Button, Library, History, UIComponent, RouterContentHelper) {
+	'rshub/ui/libs/custom/RouterContentHelper',
+	'rshub/ui/libs/custom/HttpRequest'
+], function (Controller, JSONModel, MessageBox, Utils, Popover, Button, Library, History, UIComponent, RouterContentHelper, HttpRequestor) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("controller.Shell"), {
@@ -18,8 +19,20 @@ sap.ui.define([
 	    //Global variables for Controller
 	    this.oModel = new JSONModel();
         this.oModel.loadData(sap.ui.require.toUrl("rshub/ui/model/") + "/menuItem.json", null, false);
-	    this.getView().setModel(this.oModel);
-		},
+		this.getView().setModel(this.oModel);
+		
+		var login = HttpRequestor.httpRequest('/mlloggedid', "GET", null);
+
+		login.then(function (){
+			var loginData = JSON.parse(login.responseText),
+				loginId = loginData.result.nickname;
+
+			//Set name to the logged user
+			this.byId("loggedId").setText(loginId);
+
+		}.bind(this))
+		
+	},
 
     onNavBack: function () {
         var oHistory, sPreviousHash;

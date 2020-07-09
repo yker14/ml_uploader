@@ -141,7 +141,6 @@ def imgupdate(mainfolder):
             }
 
         data["pictures"].append(nData)
-        print(data)
 
     with open("./app/static/model/images.json", "w+") as j:
         json.dump(data, j, ensure_ascii=False, indent=4)
@@ -193,6 +192,12 @@ def publish(publ_id):
 
     except Exception as e:
         return ('A problem occurred while processing the request. \n Error Message: {}'.format(e.args), 400)
+
+@app.route('/mlloggedid', methods=['GET'])
+def getLogin():
+    
+    data = {"result":{"nickname":"levipipiloco"}}
+    return (json.dumps(data),200)
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=True)
