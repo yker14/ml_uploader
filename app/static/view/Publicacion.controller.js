@@ -140,12 +140,19 @@ sap.ui.define([
 			sap.m.MessageBox.warning("Se eliminara esta publicacion de la base de datos y de Mercadolibre. ¿Desea continuar?", {
 				actions: ["Aceptar", sap.m.MessageBox.Action.CLOSE],
 				emphasizedAction: sap.m.MessageBox.Action.CLOSE,
-				onClose: function () {
-							sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
-						}.bind(this)
+				onClose: function (oAction) {
+						if (oAction=="Aceptar") {
+							var resp = HttpRequestor.httpRequest(`/publicaciones/${publId}/delete`,"POST");
+								resp.then(function () {
+									sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
+									this.handleBackPress();
+								}.bind(this))
+						}
+					}.bind(this)
 			});
 
-			this.handleBackPress();
+			
+
 		},
 
 		handleBackPress: function () {
