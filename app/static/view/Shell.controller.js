@@ -46,13 +46,20 @@ sap.ui.define([
             this.getRouter().navTo("Homeview", {}, true /*leave no history for browser*/);
         }
     },
+	onMenuItemLogout : function(ev) {
+		
+		var logout = HttpRequestor.httpRequest('/userlogout', "POST", null);
+		
+		logout.then(function(){
+			sap.m.MessageBox.success("Logged out.\n"+logout.responseText);
+		})
+	},
 
     onMenuItemSelect : function(ev) {
-			if (this.getOwnerComponent().getCurrentRoute() != ev.getParameter("item").getProperty("key")) {
-
-				RouterContentHelper.navigateTo(this, ev.getParameter("item").getProperty("key"))  
-			}
-		},
+		if (this.getOwnerComponent().getCurrentRoute() != ev.getParameter("item").getProperty("key")) {
+			RouterContentHelper.navigateTo(this, ev.getParameter("item").getProperty("key"));  
+		}
+	},
 
     handleNamePress: function (event) {
 					var oPopover = new Popover({

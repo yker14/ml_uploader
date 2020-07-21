@@ -199,5 +199,11 @@ def getLogin():
     data = {"result":{"nickname":"levipipiloco"}}
     return (json.dumps(data),200)
 
+@app.route('/userlogout', methods=['POST'])
+def logoutUser():
+    
+    data = {"message":"User Logged Out"}
+    return (json.dumps(data),200)
+
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=True)
