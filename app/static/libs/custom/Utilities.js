@@ -7,6 +7,17 @@ sap.ui.define([
 
 	return {
 
+		predicateBy: function (prop){
+			return function(a,b){
+			   if (a[prop] > b[prop]){
+				   return 1;
+			   } else if(a[prop] < b[prop]){
+				   return -1;
+			   }
+			   return 0;
+			}
+		 },
+
         nameSpaceHandler: function (objname, formAs="method") {
 
             if (formAs == "method") {
@@ -27,7 +38,7 @@ sap.ui.define([
           input == null) ? output = true : output = false;
 
           return output;
-        },
+		},
 
 		miscCount: function (maxResult, nameOfProp, minResult=0, finalText='', charAppend='', desc=false) {
 

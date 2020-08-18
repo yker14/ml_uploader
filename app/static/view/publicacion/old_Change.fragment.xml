@@ -5,11 +5,6 @@
 	xmlns:core="sap.ui.core"
 	xmlns:upload="sap.m.upload">
 	<VBox class="sapUiSmallMargin">
-		<MessageStrip id="messageStrip2"
-			showIcon="true" 
-			type="{path:'status', formatter: '.messageStripTypeFormat'}"
-			text="{path:'status', formatter: '.messageStripTextFormat'}" />
-			
 		<f:SimpleForm id="simpleformPublData"
 			editable="true"
 			layout="ResponsiveGridLayout"
@@ -28,7 +23,82 @@
 			columnsM="2"
 			singleContainerFullSize="false" >
 			<f:content>
+            <core:Title text="Datos de Publicacion" />
 
+				<Label text="ID" />
+				<Text text="{id}" />
+
+				<Label text="ID Mercadolibre" />
+				<Text text="{ml_id}" />
+
+				<Label text="Estado de Publicacion" />
+				<Text text="{status}" />
+
+				<Label text="Fuente" />
+				<Text text="{fuente}" />
+
+				<Label text="Marca" />
+				<Text text="{brand}" />
+
+				<Label text="Modelo" />
+				<Input value="{model}" />
+
+				<Label text="Condicion" />
+				<Text text="{condition}" />
+
+				<Label text="Titulo Original" />
+				<Text text="{titleraw}" />
+
+				<Label text="Titulo Publicacion" />
+				<Input value="{title}" />
+
+				<Label text="ID Categoria" />
+				<Input value="{category_id}" />
+
+				<Label text="Costo" />
+				<Input value="{cost}" />
+
+				<Label text="Precio de Publicacion" />
+				<Input value="{price}" />
+
+				<Label text="Cantidad" />
+				<Input value="{available_quantity}" />
+				
+				<Label text="Tiempo de Manufactura" />
+				<Input value="{manufacturing_time}" />
+
+				<Label text="Metodo de Compra" />
+				<Input value="{buying_mode}" />
+
+
+				<Label text="Tipo de Garantia" />
+				<Input value="{warranty_type}" />
+
+
+				<Label text="Tiempo de Garantia" />
+				<Input value="{warranty_time}" />
+
+
+				<Label text="Envio" />
+				<Input value="{envio}" />
+
+
+				<Label text="Moneda" />
+				<Input value="{currency_id}" />
+
+				<Label text="Tipo de Publicacion" />
+				<Input value=   "{listing_type_id}" />
+
+				<Label text="Descripcion" />
+				<TextArea value="{description}" editable="true" height="10rem"/>
+
+			<core:Title text="Online" />
+
+				<Label text="URL Mercadolibre" />
+				<Link text="{urlml}" href="{urlml}" target="_blank"/>
+
+				<Label text="URL Origen" />
+				<Link text="{urlorig}" href="{urlorig}" target="_blank"/>
 
 			</f:content>
 		</f:SimpleForm>

@@ -7,8 +7,9 @@ sap.ui.define([
 	'rshub/ui/libs/custom/RouterContentHelper',
 	'sap/ui/core/Fragment',
 	'rshub/ui/libs/custom/ImageRequest',
-	'rshub/ui/libs/custom/HttpRequest'
-], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper, Fragment, ImageRequestor, HttpRequestor) {
+	'rshub/ui/libs/custom/HttpRequest',
+	'sap/m/MessageStrip'
+], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper, Fragment, ImageRequestor, HttpRequestor, MessageStrip) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicacion"), {
@@ -23,11 +24,15 @@ sap.ui.define([
 		mainFolder : null,
 		headerFileName: null,
 		headerFileOrder: null,
+		headerFileId: null,
 		deleteImgContainer: [],
 		addImgContainer: [],
 		orderCount: 0,
 		uploadController: null,
 		orderController: null,
+		formController : null,
+		simpleformPublData: null,
+		displaySimpleformPublData: null,
 
 		onInit : function() {
 		
@@ -45,16 +50,10 @@ sap.ui.define([
 				this._formFragments[sPropertyName].destroy();
 				this._formFragments[sPropertyName] = null;
 				
-				//Delete images that were uploaded but not saved.
-				//this.deleteImages(this.addImgContainer);
 			}	
 		},
 
         _onRouteMatched: function(ev) {
-			// Set the initial form to be the display one
-			this.viewType = "Display";
-			this._toggleButtonsAndView(false);
-
             var currentURL = new URL(window.location.href.replace("/#","")),
 				urlParams = new URLSearchParams(currentURL.search),
 				publId = urlParams.get("publId");
@@ -68,8 +67,14 @@ sap.ui.define([
 				
                 //Set the model data to display
                 Promise.all([this.oModel]).then(function(values) {
+					
                     this.getView().setModel(values[0]);
-                    this.getView().bindElement("/publicacion");
+					this.getView().bindElement("/publicacion");
+					
+					// Set the initial form to be the display one
+					this.viewType = "Display";
+					this._toggleButtonsAndView(false);
+					
 					this.getView().getModel().updateBindings(true);
 					
                 }.bind(this))
@@ -105,7 +110,40 @@ sap.ui.define([
 		onAfterRendering: function() {
 			sap.ui.core.BusyIndicator.hide()
 		},
-		
+
+		messageStripTextFormat: function(val) {
+			
+			switch (val) {
+				case "pausado":
+					return "Pausado"
+				case "publicado":				
+					return "Publicado"
+				case "error":
+					return "Error"
+				case "pendiente":
+					return "Pendiente"
+				default:
+					return "None"
+			}
+		},
+
+		messageStripTypeFormat: function(val) {
+			console.log(val);
+			
+			switch (val) {
+				case "pausado":
+					return "Warning"
+				case "publicado":				
+					return "Success"
+				case "error":
+					return "Error"
+				case "pendiente":
+					return "Information"
+				default:
+					return "None"
+			}
+		},
+
 		handlePublishPress: function() {
 			var publId = this.publicId;
 
@@ -165,9 +203,6 @@ sap.ui.define([
 
 		handleCancelPress : function () {
 
-			//DELETE SAVED IMAGES
-			//this.deleteImages(this.addImgContainer);
-
 			//Restore the data
 			var oModel = this.getView().getModel();
 			var oData = null;
@@ -178,23 +213,33 @@ sap.ui.define([
 			this._toggleButtonsAndView(false);
 		},
 
-		deleteImages: function (imgListURL) {
-
+		deleteImages: function (fileName) {
 			var url = this.mainFolder,
 			filePath = encodeURIComponent(encodeURIComponent(url));
-
-			for (var i=0; i < imgListURL.length; i++) {
 			
-					var headers = {'File-Name-Header': imgListURL[i].split("/").splice(-1,1)[0]},
+			var headers = {'File-Name-Header': fileName, 'File-ID-Header' : this.publImg.idnamematch[fileName]},
 
-						resp = HttpRequestor.httpRequest(`/publicaciones/images/delete/${filePath}`,"POST", headers);
+			resp = HttpRequestor.httpRequest(`/publicaciones/images/delete/${filePath}`,"POST", headers);
 
-				resp.then(function() {
-					console.log("true");
-				});
-			}
+			resp.then(function() {				
+				console.log('success');
 
-			return true;
+				//LOOP THORUGH publImg's pictures and idnamematch and delete the properties
+				var oItemId = this.publImg.idnamematch[fileName];
+
+				for (var i = 0; i < this.publImg.pictures.length; i++) {
+					if (this.publImg.pictures[i].id == oItemId) {
+						this.publImg.pictures.splice(i, 1);
+						delete this.publImg.idnamematch[fileName];							
+						break;							
+					} else {
+						continue;
+					}
+				}		
+
+				this.reloadUploaderItems();
+
+			}.bind(this));		
 		},
 
 		handleSavePress : function () {
@@ -232,6 +277,18 @@ sap.ui.define([
 			console.log("Saved");
 		},
 
+		getFormControl : function () {
+			var formControl;
+
+			if (this.viewType == "Display") {				
+				formControl = this.getView().byId("display_simpleformPublData");
+				return formControl;
+			} else if (this.viewType == "Change") {
+				formControl = this.getView().byId("simpleformPublData");
+				return formControl;
+			}
+		},
+
 		_toggleButtonsAndView : function (bEdit) {
 			var oView = this.getView();
 
@@ -251,14 +308,13 @@ sap.ui.define([
 		_formFragments: {},
 		
 		_getFormFragment: function (sFragmentName) {
-			var oFormFragment = this._formFragments[sFragmentName];
 
-			if (oFormFragment) {
+			if (this._formFragments[sFragmentName]) {
 				
 				var oPage = this.byId("page");
 				oPage.insertContent(this._formFragments[sFragmentName]);
 
-				return oFormFragment;
+				return this._formFragments[sFragmentName];
 			}
 
 			Fragment.load({
@@ -270,11 +326,18 @@ sap.ui.define([
 				this.getView().addDependent(this._formFragments[sFragmentName]);
 
 				var oPage = this.byId("page");
-				oPage.insertContent(this._formFragments[sFragmentName]);
 				
 				if (this.viewType == "Change") {
+					this._setPublicationData();
+
+					oPage.insertContent(this._formFragments[sFragmentName]);
+
 					this.uploadController = this.getView().byId("uploadset");
 					this.orderController = this.getView().byId("imgorderlist");
+
+				} else if (this.viewType == "Display") {
+					this._setPublicationData();
+					oPage.insertContent(this._formFragments[sFragmentName]);
 				}
 
 			}.bind(this))
@@ -286,6 +349,90 @@ sap.ui.define([
 			oPage.removeAllContent();
 
 			this._getFormFragment(sFragmentName);
+		},
+
+		_setFormTitlePublicacion : function(side, view) {
+
+			if (side == "sideA") {
+				//Title containing the fields for the publication in the simpleform			
+				var oTitle = new sap.ui.core.Title({text:"Origen"});
+				view.addContent(oTitle);
+
+//				if (this.viewType == "Display") {
+//					this.displaySimpleformPublData.addContent(oTitle);
+//				} else if (this.viewType == "Change") {
+//					this.simpleformPublData.addContent(oTitle);
+//				}
+
+			} else if (side == "sideB") {
+				//Title containing the fields for the publication in the simpleform			
+				var oTitle = new sap.ui.core.Title({text:"Mercadolibre"});
+				view.addContent(oTitle);
+
+//				if (this.viewType == "Display") {
+//					this.displaySimpleformPublData.addContent(oTitle);
+//				} else if (this.viewType == "Change") {
+//					this.simpleformPublData.addContent(oTitle);
+//				}
+			}
+
+		},
+
+		_applyPublicationField : function (data, side) {
+
+			//Display view setup
+			if (this.viewType == "Display") {
+
+				//Create and insert label of the field
+				var oLabel = new sap.m.Label({text:data.label});
+				this.formController.addContent(oLabel);
+
+				//If view is display 
+				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/publicacion")[data.dbName]});				
+				this.formController.addContent(oText);
+
+			} else if (this.viewType == "Change") {
+
+				//Create and insert label of the field					
+				var oLabel = new sap.m.Label({text:data.label});
+				this.formController.addContent(oLabel);
+
+				//If view is change
+				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/publicacion")[data.dbName]});				
+				this.formController.addContent(oText);
+			}
+		},
+
+		_setPublicationData : function () {
+			this.formController = this.getFormControl();
+
+			var oFieldList =  new JSONModel();
+			oFieldList.loadData(sap.ui.require.toUrl("rshub/ui/model/") + "publicacionfields.json", null, false);
+			var oFieldList = oFieldList.getData(); 
+			//var sideAData = oFieldList.getData().sideA;
+			//var sideBData = oFieldList.getData().sideB;		
+			
+			Object.keys(oFieldList).forEach(function(key0, index0) {
+				var side = key0;
+				this._setFormTitlePublicacion(side,this.formController);
+				
+				//Data for side A of the simpleform
+				Object.keys(oFieldList[side]).forEach(function(key1, index1) {
+					
+					var fieldData = { 
+						dbName : oFieldList[side][key1].dbName,
+						label : oFieldList[side][key1].label,
+						editable : oFieldList[side][key1].editable,
+						type : oFieldList[side][key1].type,
+						format : oFieldList[side][key1].format,
+						items : oFieldList[side][key1].items
+					}
+
+					//Create and insert field
+					this._applyPublicationField(fieldData, side);
+
+				}.bind(this))
+			}.bind(this))
 		},
 
 		setOrderData: function () {
@@ -309,9 +456,17 @@ sap.ui.define([
 		},
 
 		setImgData: function(p) {
-			
+
+			//Adjust Order of images
+			var orderedPics = p.pictures.sort(Utils.predicateBy("orden"));
+
+			for (var i = 0; i < orderedPics.length; i++) {
+				orderedPics[i].orden = i+1;
+			}
+
+			//Assign 
 			this.publImg.mainfolder = p.mainfolder;
-			this.publImg.pictures = p.pictures;
+			this.publImg.pictures = orderedPics;
 			this.publImg.idnamematch = {};
 
 		},
@@ -372,16 +527,10 @@ sap.ui.define([
 				
 				uploadController.attachBeforeItemRemoved(function(ev) {
 					console.log("item bout to be removed");
-					console.log(ev.getParameter("item").getUrl());
-					this.deleteImgContainer.push(ev.getParameter("item").getUrl());
+					console.log(ev.getParameter("item").getUrl());														
 
-					//LOOP THORUGH publImg's pictures and idnamematch and delete the properties
-
-					//RELOAD ordercontroller
-
-					// if(this.deleteImages(this.deleteImgContainer)) {
-					// 	this.reloadUploaderItems();
-					// }					
+					//RELOAD ordercontroller and uploadcontroller and delete props
+					this.deleteImages(ev.getParameter("item").getFileName())		
 
 				}.bind(this));
 
@@ -422,7 +571,6 @@ sap.ui.define([
 							this.orderCount += 1;
 
 						} else {
-							//oUploader.getHeaderFields()[oUploader.indexOfHeaderField(this.headerFileName)].setText(oItemName)
 							this.headerFileName.setText(oItemName);
 
 							this.headerFileOrder.setText(this.orderCount);
@@ -503,7 +651,7 @@ sap.ui.define([
 				uploadItem = new sap.m.upload.UploadSetItem(itemSettings);
 
 				uploadController.addItem(uploadItem);
-				this.publImg.idnamematch[this.publImg.pictures[i].fileName] = this.publImg.pictures[i].id;				
+				this.publImg.idnamematch[this.publImg.pictures[i].filename] = this.publImg.pictures[i].id;				
 			}
 
 			//Reload Order Controller
