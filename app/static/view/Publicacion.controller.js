@@ -388,7 +388,7 @@ sap.ui.define([
 				this.formController.addContent(oLabel);
 
 				//If view is display 
-				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/publicacion")[data.dbName]});				
+				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
 				this.formController.addContent(oText);
 
 			} else if (this.viewType == "Change") {
@@ -398,7 +398,7 @@ sap.ui.define([
 				this.formController.addContent(oLabel);
 
 				//If view is change
-				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/publicacion")[data.dbName]});				
+				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
 				this.formController.addContent(oText);
 			}
 		},
