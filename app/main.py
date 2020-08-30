@@ -65,7 +65,7 @@ def page(publ_id):
     with open("./app/static/model/mock/publicacionesDB.json") as f:
         data = json.load(f)
 
-    data = {"publicacion" : data[publ_id]}
+    data = data[publ_id]
     
     return (json.dumps(data),200)
 
