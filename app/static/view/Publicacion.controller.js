@@ -112,33 +112,38 @@ sap.ui.define([
 		},
 
 		messageStripTextFormat: function(val) {
-			
-			switch (val) {
-				case "pausado":
-					return "Pausado"
-				case "publicado":				
-					return "Publicado"
-				case "error":
-					return "Error"
-				case "pendiente":
-					return "Pendiente"
-				default:
-					return "None"
-			}
+			// Return the name of the status of the ID
+			return Object.values(val)[0]
 		},
 
 		messageStripTypeFormat: function(val) {
-			console.log(val);
 			
-			switch (val) {
-				case "pausado":
+
+			switch (Object.keys(val)[0]) {
+				// paused publ
+				case "11":
 					return "Warning"
-				case "publicado":				
+
+				// active/published
+				case "10":				
 					return "Success"
-				case "error":
+
+				// deleted
+				case "12":
 					return "Error"
-				case "pendiente":
+
+				// pending
+				case "1000":
 					return "Information"
+
+				// manually paused
+				case "1001":
+					return "Warning"
+
+				// manually deleted
+				case "1002":
+					return "Error"
+
 				default:
 					return "None"
 			}
@@ -146,11 +151,20 @@ sap.ui.define([
 
 		handlePublishPress: function() {
 			var publId = this.publicId;
-
 			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/publicar', "POST", null);
 	
 			resp.then(function() {
 				sap.m.MessageBox.success("Publicacion en MercadoLibre exitoso.\n"+resp.responseText);
+
+			});
+		},
+
+		handleStockUpdatePress: function() {
+			var publId = this.publicId;
+			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/sync', "POST", null);
+	
+			resp.then(function() {
+				sap.m.MessageBox.success("Inventario actualizado.\n"+resp.responseText);
 
 			});
 		},
@@ -298,6 +312,7 @@ sap.ui.define([
 			oView.byId("cancel").setVisible(bEdit);
 			oView.byId("del").setVisible(!bEdit);
 			oView.byId("publish").setVisible(!bEdit);
+			oView.byId("stock").setVisible(!bEdit);
 
 			// Set the right form type
 			this.viewType = bEdit ? "Change" : "Display"
