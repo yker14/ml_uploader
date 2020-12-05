@@ -1,4 +1,4 @@
-{
+{"24":{
     "mainfolder": "static/media/images/darksouls",
     "pictures": [
         {
@@ -26,4 +26,26 @@
             "orden": "4"
         }
     ]
+    },
+"265":{
+    "mainfolder": "static/media/images/darksouls",
+    "pictures": [
+        {
+            "id": "2020-08-15 20:05:55.324819",
+            "folder": "static/media/images/prod2",
+            "filename": "banana.jpg",
+            "filetype": "jpg",
+            "source": "static/media/images/prod2/banana.jpg",
+            "orden": "2"
+        },
+        {
+            "id": "29",
+            "folder": "static/media/images/prod2",
+            "filename": "logo_ui4.png",
+            "filetype": "jpg",
+            "source": "static/media/images/prod2/puffin.jpg",
+            "orden": "1"
+        }
+    ]
+    }
 }

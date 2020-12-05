@@ -14,6 +14,8 @@ def homepage():
 
 @app.route('/urlload', methods=['POST'])
 def UrlLoad():
+
+    # Data modelo
     data = request.get_json(force=True)
 
     data = {"urls": [
@@ -30,10 +32,11 @@ def UrlLoad():
 @app.route('/getpubl')
 def getpublications():
 
+    # Data modelo
     data = {"publicaciones":[
 	{
 	"id": 24, 
-	"source": "./static/media/images/darksouls/darksouls.jpg",
+	"source": "static/media/images/darksouls/logo_ui3.png",
 	"status": "Nuevo", 
 	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
 	"brand": "RTA Design", 
@@ -44,7 +47,7 @@ def getpublications():
 	},
     {
 	"id": 265,
-	"source": "./static/media/images/darksouls/darksouls.jpg",
+	"source": "static/media/images/prod2/banana.jpg",
 	"status": "Nuevo", 
 	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
 	"brand": "RTA Design", 
@@ -62,6 +65,7 @@ def getpublications():
 @app.route('/publicaciones/<publ_id>')
 def page(publ_id):
 
+    # Data modelo
     with open("./app/static/model/mock/publicacionesDB.json") as f:
         data = json.load(f)
 
@@ -69,26 +73,29 @@ def page(publ_id):
     
     return (json.dumps(data),200)
 
+
 @app.route('/publicaciones/<publ_id>/delete', methods=['POST'])
 def delete(publ_id):
     
     return ('ID {} has been deleted'.format(publ_id),200)
+
 
 @app.route('/publicaciones/<publ_id>/update', methods=['POST'])
 def update(publ_id):
     
     return ('ID {} has been updated'.format(publ_id),200)
 
+
 @app.route('/publicaciones/images/request/<publ_id>')
 def imgreq(publ_id):
     
-    with open("./app/static/model/images.json") as f:
+    # Data modelo
+    with open("./app/static/model/mock/images.json") as f:
         data = json.load(f)
 
-    return (json.dumps(data),200)
+    return (json.dumps(data[publ_id]),200)
 
-
-
+# Add images
 @app.route('/publicaciones/images/<mainfolder>', methods=['POST'])
 def imgupdate(mainfolder):
     
@@ -105,7 +112,7 @@ def imgupdate(mainfolder):
         f.write(fileContent) 
 
     #Write to file
-    with open("./app/static/model/images.json") as j:
+    with open("./app/static/model/mock/images.json") as j:
         data = json.load(j)
 
         if len(data["pictures"]) == 0:
@@ -116,7 +123,8 @@ def imgupdate(mainfolder):
         #Create image data for database
         nData = {
             "id":str(datetime.datetime.now()),
-            "folder":"static/media/images/darksouls",
+            "folder": folder,
+            #"folder":"static/media/images/darksouls",
             "filename":fileName,
             "filetype":fileType,
             "source":folder+"/"+fileName,
@@ -125,10 +133,8 @@ def imgupdate(mainfolder):
 
         data["pictures"].append(nData)
 
-    with open("./app/static/model/images.json", "w+") as j:
+    with open("./app/static/model/mock/images.json", "w+") as j:
         json.dump(data, j, ensure_ascii=False, indent=4)
-
-
 
     return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)
 
@@ -150,7 +156,7 @@ def imgdelete(mainfolder):
         
         
         #Update file
-        with open("./app/static/model/images.json") as j:
+        with open("./app/static/model/mock/images.json") as j:
             data = json.load(j)
 
             for i in range(0,len(data["pictures"])):
@@ -159,7 +165,7 @@ def imgdelete(mainfolder):
                     break
                     
             
-        with open("./app/static/model/images.json", "w+") as j:
+        with open("./app/static/model/mock/images.json", "w+") as j:
             json.dump(data, j, ensure_ascii=False, indent=4)
 
         return ('Successfully updated.\nFolder: {} \nFile: {}'.format(folder, fileName), 200)

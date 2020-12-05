@@ -6,8 +6,8 @@
 	<VBox class="sapUiSmallMargin">
 		<MessageStrip id="messageStrip1"
 			showIcon="true" 
-			type="{path:'status', formatter: '.messageStripTypeFormat'}"
-			text="{path:'status', formatter: '.messageStripTextFormat'}" />
+			type="{path:'/status', formatter: '.messageStripTypeFormat'}"
+			text="{path:'/status', formatter: '.messageStripTextFormat'}" />
 
 		<f:SimpleForm id="display_simpleformPublData"
 			editable="false"
