@@ -184,12 +184,11 @@ def publish(publ_id):
         return ('A problem occurred while processing the request. \n Error Message: {}'.format(e.args), 400)
 
 
-@app.route('/publicaciones/<publ_id>/sync')
+@app.route('/publicaciones/<publ_id>/sync', methods=['POST'])
 def sync(publ_id):
 
     # Data modelo
-    data = {"EXITOOO, UPDATEADO"}
-    return (json.dumps(data),200)
+    return ('ID {} Inventario Actualizado'.format(publ_id),200)
     
 
 @app.route('/mlloggedid', methods=['GET'])
