@@ -113,13 +113,13 @@ sap.ui.define([
 
 		messageStripTextFormat: function(val) {
 			// Return the name of the status of the ID
-			return Object.values(val)[0]
+			return val.status
 		},
 
 		messageStripTypeFormat: function(val) {
 			
 
-			switch (Object.keys(val)[0]) {
+			switch (val.id) {
 				// paused publ
 				case "11":
 					return "Warning"
