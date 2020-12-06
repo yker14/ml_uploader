@@ -121,27 +121,27 @@ sap.ui.define([
 
 			switch (val.id) {
 				// paused publ
-				case "11":
+				case 11:
 					return "Warning"
 
 				// active/published
-				case "10":				
+				case 10:				
 					return "Success"
 
 				// deleted
-				case "12":
+				case 12:
 					return "Error"
 
 				// pending
-				case "1000":
+				case 1000:
 					return "Information"
 
 				// manually paused
-				case "1001":
+				case 1001:
 					return "Warning"
 
 				// manually deleted
-				case "1002":
+				case 1002:
 					return "Error"
 
 				default:
