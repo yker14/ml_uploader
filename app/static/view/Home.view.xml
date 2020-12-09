@@ -13,7 +13,7 @@
 
                 <m:Label text="URLs" />
                 <m:Input id="urlsinput"
-                         placeholder="https://www.warmVaginas.com"
+                         placeholder="https://www.comprasonlineshop.com"
                          width="50%" />
                 <m:Select id="sourcelist"
                           width="20%"
