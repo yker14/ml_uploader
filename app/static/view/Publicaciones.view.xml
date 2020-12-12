@@ -83,14 +83,14 @@
           <t:Column width="10%" hAlign="Center">
             <m:Label text="URL Origen" />
             <t:template>
-              <m:Link href="{urlorig}" text="{fuente}" target="_blank"/>
+              <m:Link href="{url_orig}" text="{fuente}" target="_blank"/>
             </t:template>
           </t:Column>
 
           <t:Column width="10%" hAlign="Center">
             <m:Label text="URL MercadoLibre" />
             <t:template>
-              <m:Link href="{urlml}" text="MercadoLibre" target="_blank"/>
+              <m:Link href="{url_ml}" text="MercadoLibre" target="_blank"/>
             </t:template>
           </t:Column>
 

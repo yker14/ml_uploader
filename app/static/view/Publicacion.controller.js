@@ -64,11 +64,13 @@ sap.ui.define([
             resp.then(function() {
                 this.publData = JSON.parse(resp.responseText);
 				this.oModel = new JSONModel(this.publData, true);
-				
+				var imgResp = ImageRequestor.getImages(publId);
                 //Set the model data to display
-                Promise.all([this.oModel]).then(function(values) {
-					
-                    this.getView().setModel(values[0]);
+                Promise.all([this.oModel, imgResp]).then(function(values) {
+					var model = values[0];
+					var images = values[1];
+
+                    this.getView().setModel(model);
 					this.getView().bindElement("/publicacion");
 					
 					// Set the initial form to be the display one
@@ -77,11 +79,27 @@ sap.ui.define([
 					
 					this.getView().getModel().updateBindings(true);
 					
+					// Set images model
+					this.setImgData(Object.assign({},JSON.parse(images)));
+
+					this.imgModel = new JSONModel(this.publImg);
+
+					this.imgModel.attachPropertyChange(function (ev) {
+						//REFRESH IMAGE ORDER CONTROLLER ITEMS					
+						this.orderController.getModel().refresh();
+
+					}.bind(this));
+
+					var oCarousel = this.getView().byId("idcarousel");
+					oCarousel.setModel(this.imgModel);
+					oCarousel.updateBindings(true);
+
                 }.bind(this))
     
 			  }.bind(this));
 			  
 			// Request publication images
+			/*
 			var imgResp = ImageRequestor.getImages(publId);
 
 			imgResp.then(function() {
@@ -100,21 +118,19 @@ sap.ui.define([
 				oCarousel.setModel(this.imgModel);
 				oCarousel.updateBindings(true);
 
-			}.bind(this));			
+			}.bind(this));
+			*/			
 		},
 		
 		onBeforeRendering: function() {
 			sap.ui.core.BusyIndicator.show()
 		},
+		
 
 		onAfterRendering: function() {
 			sap.ui.core.BusyIndicator.hide()
 		},
 
-		messageStripTextFormat: function(val) {
-			// Return the name of the status of the ID
-			return val.status
-		},
 
 		messageStripTypeFormat: function(val) {
 			

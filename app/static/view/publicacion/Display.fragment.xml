@@ -7,7 +7,7 @@
 		<MessageStrip id="messageStrip1"
 			showIcon="true" 
 			type="{path:'/status', formatter: '.messageStripTypeFormat'}"
-			text="{path:'/status', formatter: '.messageStripTextFormat'}" />
+			text="{path:'/status/status'}" />
 
 		<f:SimpleForm id="display_simpleformPublData"
 			editable="false"

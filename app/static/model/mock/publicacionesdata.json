@@ -4,8 +4,8 @@
     "pictures":"images/Coj\u00ednErgon\u00f3micoNegro/Coj\u00ednErgon\u00f3micoNegro0",
     "price": 117350, 
     "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-    "urlML": null, 
-    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "url_ML": null, 
+    "url_Orig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
     "source":"Victors Secret"
   }, 
   {"id":"27",
@@ -13,8 +13,8 @@
     "pictures":"images/Coj\u00ednErgon\u00f3micoNegro/Coj\u00ednErgon\u00f3micoNegro1",
     "price": 117350, 
     "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-    "urlML": null, 
-    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "url_ML": null, 
+    "url_Orig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
     "source":"Victors Secret"
   },
   {"id":"123456",
@@ -22,8 +22,8 @@
     "pictures":"./static/media/images/darksouls/darksouls.jpg",
     "price": 117350, 
     "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-    "urlML": null, 
-    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "url_ML": null, 
+    "url_Orig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
     "source":"Victors Secret"
   },
   {"id":"300",
@@ -31,8 +31,8 @@
     "pictures":"./static/media/images/darksouls/darksouls.jpg",
     "price": 117350, 
     "title": "Coj\u00edn Ergon\u00f3mico Negro Artecma", 
-    "urlML": null, 
-    "urlOrig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
+    "url_ML": null, 
+    "url_Orig": "https://www.homecenter.com.co/homecenter-co/product/303196/Cojin-Ergonomio-Negro/303196",
     "source":"Victors Secret"
   }]
 }

@@ -1,5 +1,13 @@
 {
     "sideA" : {
+        "ml_id" : {
+            "dbName" : "ml_id",
+            "label": "ID Mercadolib",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "text",
+            "items" : null
+        },
         "url_ml" : {
             "dbName" : "url_ml",
             "label": "URL MercadoLibre",
@@ -16,30 +24,6 @@
             "format" : "text",
             "items" : null
         },
-        "brand" : {
-            "dbName" : "brand",
-            "label": "Marca",
-            "editable" : "false",
-            "type" : "text",
-            "format" : "text",
-            "items" : null
-        },
-        "model" : {
-            "dbName" : "model",
-            "label": "Modelo",
-            "editable" : "false",
-            "type" : "text",
-            "format" : "text",
-            "items" : null
-        },
-        "listing_type_id" : {
-            "dbName" : "listing_type_id",
-            "label": "Tipo de Listado",
-            "editable" : "true",
-            "type" : "dropdown",
-            "format" : "text",
-            "items" : ["Premium", "Clasica"]
-        },
         "price" : {
             "dbName" : "price",
             "label": "Precio de Publicacion",
@@ -48,11 +32,51 @@
             "format" : "currency",
             "items" : null
         },
+        "available_quantity" : {
+            "dbName" : "available_quantity",
+            "label": "Cantidad Disponible",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "number",
+            "items" : null
+        },
         "description" : {
             "dbName" : "description",
             "label": "Descripcion",
             "editable" : "true",
             "type" : "textbox",
+            "format" : "text",
+            "items" : null
+        },
+        "free_shipping" : {
+            "dbName" : "free_shipping",
+            "label": "Envío gratis",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "number",
+            "items" : null
+        },
+        "local_pick_up" : {
+            "dbName" : "local_pick_up",
+            "label": "Envío a acordar con el vendedor",
+            "editable" : "true",
+            "type" : "text",
+            "format" : "number",
+            "items" : null
+        },
+        "listing_type_ml_id" : {
+            "dbName" : "listing_type_ml_id",
+            "label": "Tipo de listado",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "text",
+            "items" : null
+        },
+        "buying_mode" : {
+            "dbName" : "buying_mode",
+            "label": "Metodo de Compra",
+            "editable" : "false",
+            "type" : "text",
             "format" : "text",
             "items" : null
         },
@@ -64,27 +88,19 @@
             "format" : "text",
             "items" : ["new", "used"]
         },
-        "available_quantity" : {
-            "dbName" : "available_quantity",
-            "label": "Cantidad Disponible",
-            "editable" : "true",
-            "type" : "text",
-            "format" : "number",
-            "items" : null
-        },
-        "buying_mode" : {
-            "dbName" : "buying_mode",
-            "label": "Metodo de Compra",
+        "currency_id" : {
+            "dbName" : "currency_id",
+            "label": "Moneda",
             "editable" : "false",
             "type" : "text",
             "format" : "text",
             "items" : null
         },
-        "shipping_mode" : {
-            "dbName" : "shipping_mode",
-            "label": "Envio",
-            "editable" : "true",
-            "type" : "dropdown",
+        "sold_quantity" : {
+            "dbName" : "sold_quantity",
+            "label": "Cantidades vendidas",
+            "editable" : "false",
+            "type" : "text",
             "format" : "text",
             "items" : null
         }
@@ -106,33 +122,25 @@
             "format" : "text",
             "items" : null
         },
-        "cost": {
-            "dbName" : "cost",
-            "label": "Costo de Producto",
-            "editable" : "false",
-            "type" : "text",
-            "format" : "currency",
-            "items" : null
-        },
-        "currency_id": {
-            "dbName" : "currency_id",
-            "label": "Moneda",
-            "editable" : "false",
-            "type" : "text",
-            "format" : "text",
-            "items" : null
-        },
-        "Origin": {
-            "dbName" : "Origin",
+        "origin": {
+            "dbName" : "origin",
             "label": "Origen",
             "editable" : "true",
             "type" : "text",
             "format" : "text",
             "items" : null
         },
-        "ml_fee": {
-            "dbName" : "ml_fee",
-            "label": "Comision de MercadoLibre",
+        "title_origin" : {
+            "dbName" : "title_origin",
+            "label": "Titulo original",
+            "editable" : "true",
+            "type" : "text",
+            "format" : "text",
+            "items" : null
+        },
+        "cost": {
+            "dbName" : "cost",
+            "label": "Costo de Producto",
             "editable" : "false",
             "type" : "text",
             "format" : "currency",
@@ -146,6 +154,14 @@
             "format" : "text",
             "items" : null
         },
+        "updated_at": {
+            "dbName" : "updated_at",
+            "label": "Actualizado",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "date",
+            "items" : null
+        },
         "created_at": {
             "dbName" : "created_at",
             "label": "Creado",
@@ -154,12 +170,28 @@
             "format" : "date",
             "items" : null
         },
-        "updated_at": {
-            "dbName" : "updated_at",
-            "label": "Actualizado",
+        "attributes": {
+            "dbName" : "attributes",
+            "label": "Atributos",
             "editable" : "false",
             "type" : "text",
-            "format" : "date",
+            "format" : "text",
+            "items" : null
+        },
+        "sale_terms": {
+            "dbName" : "sale_terms",
+            "label": "Terminos de venta",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "text",
+            "items" : null
+        },
+        "category": {
+            "dbName" : "category",
+            "label": "Categoría",
+            "editable" : "false",
+            "type" : "text",
+            "format" : "text",
             "items" : null
         }
     }
