@@ -45,7 +45,13 @@ sap.ui.define([
         } else {
             this.getRouter().navTo("Homeview", {}, true /*leave no history for browser*/);
         }
-    },
+	},
+	
+	onLogoPress: function() {
+		// Navigate back to the origin of this page
+		window.location.href = window.location.origin
+	},
+
 	onMenuItemLogout : function(ev) {
 		
 		var logout = HttpRequestor.httpRequest('/userlogout', "POST", null);

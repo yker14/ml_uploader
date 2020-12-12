@@ -20,10 +20,9 @@
 
 				</Button>
 
-                <Title text="Administracion de la tienda"/>
                 <Image src="./static/media/logo/logo_ui5.png"
-                       height="70%"/>
-
+                       height="70%"
+					   press="onLogoPress"/>
 
 				<tnt:ToolHeaderUtilitySeparator />
 				<ToolbarSpacer>
