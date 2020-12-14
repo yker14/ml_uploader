@@ -5,8 +5,28 @@
           height="100%">
   <m:VBox>
     <m:Title text="THIS IS PUBLICACIONES" />
+
     <m:HBox height="10rem">
-      <m:Title text="FILTERS GOES HERE"/>
+      <!--<m:Title text="FILTERS GOES HERE"/>-->
+      <m:FacetFilter
+        id="idFacetFilter"
+        type="Simple"
+        showPersonalization="true"
+        showReset="true"
+        reset="handleFacetFilterReset"
+        confirm="handleConfirm"
+        lists="{/ProductCollectionStats/Filters}">
+          <m:FacetFilterList
+            title="{type}"
+            key="{key}"
+            mode="MultiSelect"
+            items="{path:'values', templateShareable: true}" >
+              <m:FacetFilterItem
+                text="{text}"
+                key="{key}"
+                count="{data}" />
+          </m:FacetFilterList>
+      </m:FacetFilter>
     </m:HBox>
 
     <m:HBox height="10rem">

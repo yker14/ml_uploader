@@ -4,17 +4,21 @@ sap.ui.define([
     'sap/ui/core/UIComponent',
     'sap/m/library',
     'rshub/ui/libs/custom/Utilities',
-    'rshub/ui/libs/custom/RouterContentHelper'
-], function (Controller, JSONModel, UIComponent, sapMLib, Utils, RouterContentHelper) {
+    'rshub/ui/libs/custom/RouterContentHelper',
+    'rshub/ui/libs/custom/BusyIndicator',
+], function (Controller, JSONModel, UIComponent, sapMLib, Utils, RouterContentHelper,BusyIndicator) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicaciones"), {
 		onInit : function() {
-          
+            this.facetFilter = this.getView().byId("idFacetFilter");
+
             var routeName = this.getOwnerComponent().getCurrentRoute();
             this.getOwnerComponent().getRouter().getRoute(routeName).attachMatched(this._onRouteMatched, this);
 
-            this.refreshPublData();
+            // Enable busy indicator to indicate loading
+            BusyIndicator.showBusyIndicator(this);
+            this.refreshPublData();   
         },
 
         _onRouteMatched: function() {
