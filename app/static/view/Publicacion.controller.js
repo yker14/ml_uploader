@@ -80,7 +80,7 @@ sap.ui.define([
 					this.getView().getModel().updateBindings(true);
 					
 					// Set images model
-					this.setImgData(Object.assign({},JSON.parse(images)));
+					this.setImgData(Object.assign({},images));
 
 					this.imgModel = new JSONModel(this.publImg);
 

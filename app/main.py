@@ -93,7 +93,7 @@ def imgreq(publ_id):
     with open("./app/static/model/mock/images.json") as f:
         data = json.load(f)
 
-    return (json.dumps(data[publ_id]),200)
+    return (data[publ_id],200)
 
 # Add images
 @app.route('/publicaciones/images/<mainfolder>', methods=['POST'])
