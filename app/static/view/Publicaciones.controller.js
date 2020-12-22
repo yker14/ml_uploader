@@ -4,15 +4,22 @@ sap.ui.define([
     'sap/ui/core/UIComponent',
     'sap/m/library',
     'rshub/ui/libs/custom/Utilities',
-    'rshub/ui/libs/custom/RouterContentHelper'
-], function (Controller, JSONModel, UIComponent, sapMLib, Utils, RouterContentHelper) {
+    'rshub/ui/libs/custom/RouterContentHelper',
+    'sap/ui/model/Filter',
+	"sap/ui/model/FilterOperator"
+], function (Controller, JSONModel, UIComponent, sapMLib, Utils, RouterContentHelper, Filter, FilterOperator) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicaciones"), {
-		onInit : function() {
+        // Objects
+        oPublTable: null,
+
+        onInit : function() {
           
             var routeName = this.getOwnerComponent().getCurrentRoute();
             this.getOwnerComponent().getRouter().getRoute(routeName).attachMatched(this._onRouteMatched, this);
+
+            this.oPublTable = this.getView().byId("urltable");
 
             this.refreshPublData();
         },
@@ -73,10 +80,49 @@ sap.ui.define([
         
         onSave: function(ev) {
             console.log("Info Saved")
-        }
-        
-	});
+        },
 
+        filterPubl: function(ev) {
+            
+			// build filter array
+            var aFilter = [];
+            var oColumn = ev.getParameter("column");
+            var sQuery = ev.getParameter("value");
+            var sType = oColumn.getFilterType().getName();
+            var sOperator = null;
+
+            // set the operator based on the key
+            if (sType == 'String') {
+                sOperator = FilterOperator.Contains
+            } else {
+                sOperator = FilterOperator.EQ
+            };
+
+			if (sQuery) {
+				aFilter.push(new Filter(sType, sOperator, sQuery));
+			}
+            
+			// filter binding
+			var oBinding = this.oPublTable.getBinding("rows");
+            oBinding.filter(aFilter);
+        },
+
+		clearAllFilters : function(ev) {
+            var aFilter = null;
+            
+            // Reset binding filter
+            var oBinding = this.oPublTable.getBinding("rows");
+            oBinding.filter(aFilter);
+
+            // Reset every column filter
+            var tableColumns = this.oPublTable.getColumns();
+
+            for (var col=0; col < tableColumns.length; col++) {
+                tableColumns[col].setFilterValue("");
+                tableColumns[col].setFiltered(false);
+            };
+        }
+    });
 	return CController;
 
 });

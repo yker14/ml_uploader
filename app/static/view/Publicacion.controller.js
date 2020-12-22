@@ -419,8 +419,13 @@ sap.ui.define([
 				this.formController.addContent(oLabel);
 
 				//If view is display 
-				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
-				this.formController.addContent(oText);
+				if (data.type == "link") {
+					var oLink = new sap.m.Link({text:this.getView().getModel().getProperty("/")[data.dbName],href:this.getView().getModel().getProperty("/")[data.dbName],target:"_blank"});				
+					this.formController.addContent(oLink);
+				} else {
+					var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
+					this.formController.addContent(oText);
+				}
 
 			} else if (this.viewType == "Change") {
 

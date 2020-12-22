@@ -4,22 +4,21 @@
           xmlns:t="sap.ui.table"
           height="100%">
   <m:VBox>
-    <m:Title text="THIS IS PUBLICACIONES" />
-    <m:HBox height="10rem">
-      <m:Title text="FILTERS GOES HERE"/>
-    </m:HBox>
-
     <m:HBox height="10rem">
       <t:Table id="urltable"
               selectionMode="None"
-              visibleRowCount="7"
+              visibleRowCount="10"
               ariaLabelledBy="title"
               rows="{/publicaciones}"
+              filter="filterPubl"
               width="100%">
         <t:extension>
           <m:OverflowToolbar>
             <m:Title id="title" text="Listado de Publicaciones"/>
             <m:ToolbarSpacer/>
+            <m:Button	icon="sap-icon://clear-filter"
+                      tooltip="Borrar Filtro"
+                      press="clearAllFilters"/>
             <m:Button	icon="sap-icon://synchronize"
                       tooltip="Refresh"
                       press="refreshPublData"/>
@@ -28,14 +27,14 @@
         </t:extension>
 
         <t:columns>
-          <t:Column width="4rem" hAlign="Center">
+          <t:Column width="4rem" hAlign="Center" filterProperty="id" filterType="sap.ui.model.type.Integer">
             <m:Label text="ID" />
             <t:template>
               <m:Text text="{id}"/>
             </t:template>
           </t:Column>
 
-          <t:Column width="4rem"> 
+          <t:Column width="4rem" filterType="sap.ui.model.type.String"> 
             <m:Label text="Detalle"/>
             <t:template>
               <m:Button icon="sap-icon://show" width="10%" press="onDetailViewPress"/>
@@ -52,42 +51,42 @@
             </t:template>
           </t:Column>
 
-          <t:Column width="10%" hAlign="Center"> 
-            <m:Label text="Status" />
+          <t:Column width="10%" hAlign="Center" filterProperty="status" filterType="sap.ui.model.type.String">  
+            <m:Label text="Estado" />
             <t:template>
               <m:Text text="{status}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="30%" hAlign="Center">
-            <m:Label text="Title" />
+          <t:Column width="30%" hAlign="Center" filterProperty="title" filterType="sap.ui.model.type.String">
+            <m:Label text="Titulo" />
             <t:template>
               <m:Text text="{title}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="20%" hAlign="Center">
-            <m:Label text="Brand" />
+          <t:Column width="20%" hAlign="Center" filterProperty="brand" filterType="sap.ui.model.type.String">
+            <m:Label text="Marca" />
             <t:template>
               <m:Text text="{brand}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="10%" hAlign="Center">
-            <m:Label text="Price" />
+          <t:Column width="10%" hAlign="Center" filterProperty="price" filterType="sap.ui.model.type.Integer">
+            <m:Label text="Precio" />
             <t:template>
               <m:Text text="${price}" wrapping="false" />
             </t:template>
           </t:Column>
 
-          <t:Column width="10%" hAlign="Center">
+          <t:Column width="10%" hAlign="Center" filterProperty="url_orig" filterType="sap.ui.model.type.String">
             <m:Label text="URL Origen" />
             <t:template>
-              <m:Link href="{url_orig}" text="{fuente}" target="_blank"/>
+              <m:Link href="{url_orig}" text="{origin}" target="_blank"/>
             </t:template>
           </t:Column>
 
-          <t:Column width="10%" hAlign="Center">
+          <t:Column width="10%" hAlign="Center" filterProperty="url_ml" filterType="sap.ui.model.type.String">
             <m:Label text="URL MercadoLibre" />
             <t:template>
               <m:Link href="{url_ml}" text="MercadoLibre" target="_blank"/>

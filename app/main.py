@@ -41,9 +41,9 @@ def getpublications():
 	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
 	"brand": "RTA Design", 
 	"price": 169850, 
-	"urlorig": "https://www.homecenter.com.co/homecenter-co/product/334041/Como-6-sillas-Napoles-Espera-Negra/334041", 
-	"fuente": "Homecenter", 
-	"urlml": None
+	"url_orig": "https://www.homecenter.com.co/homecenter-co/product/160689/?cid=494566&=INTERNA",
+	"origin": "Homecenter", 
+	"url_ml": None
 	},
     {
 	"id": 265,
@@ -52,9 +52,9 @@ def getpublications():
 	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
 	"brand": "RTA Design", 
 	"price": 169850, 
-	"urlorig": "https://www.homecenter.com.co/homecenter-co/product/334041/Como-6-sillas-Napoles-Espera-Negra/334041", 
-	"fuente": "Homecenter", 
-	"urlml": None
+	"url_orig": "https://www.homecenter.com.co/homecenter-co/product/334041/Como-6-sillas-Napoles-Espera-Negra/334041", 
+	"origin": "Homecenter", 
+	"url_ml": None
 	}
 
     ]}
