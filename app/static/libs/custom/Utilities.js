@@ -6,6 +6,11 @@ sap.ui.define([
 	// class providing static utility methods.
 
 	return {
+		
+		openURLInNewTab: function openInNewTab(url) {
+			var win = window.open(url, '_blank');
+			window.focus();
+		},
 
 		predicateBy: function (prop){
 			return function(a,b){

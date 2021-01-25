@@ -189,7 +189,20 @@ def sync(publ_id):
 
     # Data modelo
     return ('ID {} Inventario Actualizado'.format(publ_id),200)
-    
+
+
+@app.route('/publicaciones/<publ_id>/manual', methods=['POST'])
+def update_to_manual(publ_id):
+
+    # Data modelo
+    return ('ID {} cambiado a manual'.format(publ_id),200)
+
+
+@app.route('/publicaciones/<publ_id>/pause', methods=['POST'])
+def pause(publ_id):
+
+    # Data modelo
+    return ('ID {} pausado'.format(publ_id),200)
 
 @app.route('/mlloggedid', methods=['GET'])
 def getLogin():

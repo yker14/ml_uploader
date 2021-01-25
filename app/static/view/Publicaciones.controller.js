@@ -70,12 +70,20 @@ sap.ui.define([
         onDetailViewPress: function(ev) {
             
             var publId = ev.getSource().getParent().getCells()[0].getText();
+            
+            /*
             var parameters = 
                 {
                     "?search": {"publId": publId}
                 };
-
+            
             RouterContentHelper.navigateTo(this, "Publicacion", parameters)            
+            */
+            
+            // To Open in a new tab            
+            var url = window.location.origin + "#/publicacion/search?publId=" + publId;
+            Utils.openURLInNewTab(url);
+            
         },
         
         onSave: function(ev) {

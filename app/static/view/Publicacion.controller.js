@@ -165,6 +165,10 @@ sap.ui.define([
 			}
 		},
 
+		messageStripTextFormat: function(val) {
+			return val.status
+		},
+
 		handlePublishPress: function() {
 			var publId = this.publicId;
 			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/publicar', "POST", null);
@@ -181,6 +185,26 @@ sap.ui.define([
 	
 			resp.then(function() {
 				sap.m.MessageBox.success("Inventario actualizado.\n"+resp.responseText);
+
+			});
+		},
+
+		handlePausePress: function() {
+			var publId = this.publicId;
+			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/pause', "POST", null);
+	
+			resp.then(function() {
+				sap.m.MessageBox.success("Pausado en MercadoLibre exitoso.\n"+resp.responseText);
+
+			});
+		},
+
+		handleManualPublishPress: function() {
+			var publId = this.publicId;
+			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/manual', "POST", null);
+	
+			resp.then(function() {
+				sap.m.MessageBox.success("Publicacion en modo manual.\n"+resp.responseText);
 
 			});
 		},
@@ -329,6 +353,8 @@ sap.ui.define([
 			oView.byId("del").setVisible(!bEdit);
 			oView.byId("publish").setVisible(!bEdit);
 			oView.byId("stock").setVisible(!bEdit);
+			oView.byId("manualStop").setVisible(!bEdit);
+			oView.byId("manualPublish").setVisible(!bEdit);
 
 			// Set the right form type
 			this.viewType = bEdit ? "Change" : "Display"
