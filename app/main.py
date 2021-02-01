@@ -34,28 +34,34 @@ def getpublications():
 
     # Data modelo
     data = {"publicaciones":[
-	{
-	"id": 24, 
-	"source": "static/media/images/darksouls/logo_ui3.png",
-	"status": "Nuevo", 
-	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
-	"brand": "RTA Design", 
-	"price": 169850, 
-	"url_orig": "https://www.homecenter.com.co/homecenter-co/product/160689/?cid=494566&=INTERNA",
-	"origin": "Homecenter", 
-	"url_ml": None
-	},
     {
-	"id": 265,
-	"source": "static/media/images/prod2/banana.jpg",
-	"status": "Nuevo", 
-	"title": "Combo x6 sillas Napoles Espera Negra RTA Design", 
-	"brand": "RTA Design", 
-	"price": 169850, 
-	"url_orig": "https://www.homecenter.com.co/homecenter-co/product/334041/Como-6-sillas-Napoles-Espera-Negra/334041", 
-	"origin": "Homecenter", 
-	"url_ml": None
-	}
+      "as_status": "included", 
+      "as_status_id": 1, 
+      "brand": "Klimber", 
+      "id": 24, 
+      "ml_status": "pending", 
+      "ml_status_id": 1000, 
+      "origin": "Homecenter", 
+      "price": 85000, 
+      "source": "static/media/images/darksouls/logo_ui3.png", 
+      "title": "Combo x 2 Colchones Junior + 2 Almohadas + Bomba KLIMBER", 
+      "url_ml": None, 
+      "url_orig": "https://www.homecenter.com.co/homecenter-co/product/344322/"
+    },
+    {
+      "as_status": "included", 
+      "as_status_id": 1, 
+      "brand": "Klimber", 
+      "id": 265, 
+      "ml_status": "pending", 
+      "ml_status_id": 1000, 
+      "origin": "Homecenter", 
+      "price": 85000, 
+      "source": "static/media/images/prod2/banana.jpg", 
+      "title": "Combo x 2 Colchones Junior + 2 Almohadas + Bomba KLIMBER", 
+      "url_ml": None, 
+      "url_orig": "https://www.homecenter.com.co/homecenter-co/product/344322/"
+    }
 
     ]}
 

@@ -11,16 +11,16 @@
 					<Button id="back" icon="sap-icon://nav-back" press="handleBackPress" />
 				</contentLeft>
 				<contentRight>
-					<Button id="edit" type="Attention" text="Editar" press="handleEditPress" />
-					<Button id="stock" type="Attention" text="Actualizar Stock" visible="true" press="handleStockUpdatePress" />
-					<Button id="publish" type="Attention" text="Publicar en MercadoLibre" press="handlePublishPress" />
-					<Button id="del" type="Attention" text="Borrar Publicacion" press="handleDeletePress" />
+					<Button id="edit" text="Editar" press="handleEditPress" />
+					<Button id="stock" text="Actualizar Stock" visible="true" press="handleStockUpdatePress" />
+					<Button id="publish" text="Publicar en MercadoLibre" press="handlePublishPress" />
+					<Button id="del" text="Borrar Publicacion" press="handleDeletePress" />
 
-					<Button id="manualStop" type="Attention" text="Pausar Publicacion" visible="true" press="handlePausePress" />
-					<Button id="manualPublish" type="Attention" text="Excluir del AutoStock" visible="true" press="handleManualPublishPress" />
+					<Button id="manualStop" text="Pausar Publicacion" visible="true" press="handlePausePress" />
+					<Button id="manualPublish" text="Excluir del AutoStock" visible="true" press="handleManualPublishPress" />
 
-					<Button id="save" type="Attention" text="Guardar" visible="false" press="handleSavePress" />
-					<Button id="cancel" type="Attention" text="Cancelar" visible="false" press="handleCancelPress" />	
+					<Button id="save" text="Guardar" visible="false" press="handleSavePress" />
+					<Button id="cancel" text="Cancelar" visible="false" press="handleCancelPress" />	
 				</contentRight>
 			</Bar>
 		</customHeader>

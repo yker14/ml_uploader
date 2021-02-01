@@ -3,17 +3,18 @@ sap.ui.define([
 	'sap/ui/model/json/JSONModel',
     'rshub/ui/libs/custom/Utilities',
     'sap/ui/core/UIComponent',
-	'sap/base/security/encodeURL',
+	'sap/m/Dialog',
 	'rshub/ui/libs/custom/RouterContentHelper',
 	'sap/ui/core/Fragment',
 	'rshub/ui/libs/custom/ImageRequest',
 	'rshub/ui/libs/custom/HttpRequest',
-	'sap/m/MessageStrip'
-], function (Controller, JSONModel, Utils, UIComponent, EncodeURL, RouterContentHelper, Fragment, ImageRequestor, HttpRequestor, MessageStrip) {
+	'rshub/ui/libs/api/loadML'
+], function (Controller, JSONModel, Utils, UIComponent, Dialog, RouterContentHelper, Fragment, ImageRequestor, HttpRequestor, ML) {
 	"use strict";
 
 	var CController = Controller.extend(Utils.nameSpaceHandler("view.Publicacion"), {
 
+		tempVars : {},
 		viewData : {},
 		viewType : "Display",
 		publData : {},
@@ -135,7 +136,7 @@ sap.ui.define([
 		messageStripTypeFormat: function(val) {
 			
 
-			switch (val.id) {
+			switch (val.as_status_id) {
 				// paused publ
 				case 11:
 					return "Warning"
@@ -166,7 +167,7 @@ sap.ui.define([
 		},
 
 		messageStripTextFormat: function(val) {
-			return val.status
+			return val.as_status_id;
 		},
 
 		handlePublishPress: function() {
@@ -386,7 +387,6 @@ sap.ui.define([
 				
 				if (this.viewType == "Change") {
 					this._setPublicationData();
-
 					oPage.insertContent(this._formFragments[sFragmentName]);
 
 					this.uploadController = this.getView().byId("uploadset");
@@ -448,21 +448,162 @@ sap.ui.define([
 				if (data.type == "link") {
 					var oLink = new sap.m.Link({text:this.getView().getModel().getProperty("/")[data.dbName],href:this.getView().getModel().getProperty("/")[data.dbName],target:"_blank"});				
 					this.formController.addContent(oLink);
-				} else {
+				}			
+				else {
 					var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
 					this.formController.addContent(oText);
 				}
 
-			} else if (this.viewType == "Change") {
+			} else if (this.viewType == "Change") {	
 
 				//Create and insert label of the field					
-				var oLabel = new sap.m.Label({text:data.label});
+				let oLabel = new sap.m.Label({text:data.label});
 				this.formController.addContent(oLabel);
 
-				//If view is change
-				var oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
-				this.formController.addContent(oText);
+				if (data.type == "button") {
+					let oButton = new sap.m.Button({text:this.getView().getModel().getProperty("/")[data.dbName], press: this.getView().getController()[data.config.onPress].bind(this)});				
+					this.formController.addContent(oButton);
+				}
+				else {					
+					let oText = new sap.m.Text({text:this.getView().getModel().getProperty("/")[data.dbName]});				
+					this.formController.addContent(oText);
+				}
 			}
+		},
+
+		onCategoryPress : function (ev) {			
+			let tempMLCategories = ML.getCategories();
+			let tempModel = new JSONModel();			
+			
+			Promise.all([tempMLCategories, tempModel, ev.hasOwnProperty("skipReCreation")]).then(function(values) {
+				let MLCategories = values[0],
+				oModel = values[1];
+				this.currentCategoryPath = [];
+				
+				console.log(MLCategories);		
+
+				let categoryList = new sap.m.List({
+					items: {
+						path: "/",
+						template: new sap.m.StandardListItem({
+							type: "Navigation",
+							title: "{name}",
+							info: "{id}",
+							press: this.onSelectCategory.bind(this)
+						})
+					}
+				});
+
+				// Set data to the model
+				oModel.setData(MLCategories);
+				categoryList.setModel(oModel);
+
+				if (!this.oCategoryDialog) {
+					
+					this.oCategoryDialog = new Dialog({
+						title: "Categorias",
+						contentWidth: "40%",
+						contentHeight: "30%",
+						endButton: new sap.m.Button({
+							text: "Cerrar",
+							press: function () {
+								this.oCategoryDialog.close();
+							}.bind(this)
+						}),
+						beginButton: new sap.m.Button({
+							visible: false,
+							text: "Atras",
+							press: this.goPrevCategory.bind(this)
+						})
+					});
+					
+					//to get access to the controller's model
+					this.getView().addDependent(this.oCategoryDialog);
+					this.oCategoryDialog.addContent(categoryList);
+					this.oCategoryDialog.open();
+				} else {
+
+					this.oCategoryDialog.destroyContent();
+					this.oCategoryDialog.addContent(categoryList);
+
+					if (!values[2]) {
+						this.oCategoryDialog.open();	
+					}
+
+					this.oCategoryDialog.getBeginButton().setVisible(false);
+				}
+			}.bind(this));
+		},
+
+		goPrevCategory : function (ev) {
+			
+			let childCategoryInfo = ML.getChildCategory(this.currentCategory);
+
+			childCategoryInfo.then(function (val){
+				if (this.currentCategoryPath.length > 1) {
+					this.onSelectCategory({"category": val.path_from_root[val.path_from_root.length - 2].id});
+				} else {
+					this.onCategoryPress({"skipReCreation": true});
+				}
+			}.bind(this))
+		},
+
+		onSelectCategory : function (ev) {
+			if (ev.hasOwnProperty("category")) {
+				this.currentCategory = ev.category;
+			} else {
+				this.currentCategory = ev.getSource().getInfo();
+			}
+			
+			// Get child categories of selected Category
+			let tempMLCategories = ML.getChildCategory(this.currentCategory);
+			let tempModel = new JSONModel();
+
+			Promise.all([tempMLCategories, tempModel]).then(function (val) {
+				let childCategoryInfo = val[0];		
+				this.currentCategoryPath = val[0].path_from_root;		
+				let childCategories = childCategoryInfo.children_categories;
+				let oModel = val[1];				
+				let categoryList = null;
+
+				oModel.setData(childCategories);
+
+				if (childCategories.length > 0) {
+					categoryList = new sap.m.List({
+						items: {
+							path: "/",
+							template: new sap.m.StandardListItem({
+								type: "Navigation",
+								title: "{name}",
+								info: "{id}",
+								press: this.onSelectCategory.bind(this)
+							})
+						}
+					});
+				} else {
+					categoryList = new sap.m.List({
+						items: {
+							path: "/",
+							template: new sap.m.StandardListItem({
+								type: "Inactive",
+								title: "{name}",
+								info: "{id}",
+								press: this.onSelectCategory.bind(this)
+							})
+						}
+					});					
+				}
+
+				categoryList.setModel(oModel);
+				this.oCategoryDialog.destroyContent();
+				this.oCategoryDialog.addContent(categoryList);	
+				
+				this.oCategoryDialog.getBeginButton().setVisible(true);
+
+			}.bind(this));
+
+			// Clean tempVars data
+			this.tempVars = {};
 		},
 
 		_setPublicationData : function () {
@@ -487,7 +628,8 @@ sap.ui.define([
 						editable : oFieldList[side][key1].editable,
 						type : oFieldList[side][key1].type,
 						format : oFieldList[side][key1].format,
-						items : oFieldList[side][key1].items
+						items : oFieldList[side][key1].items,
+						config : oFieldList[side][key1].config						
 					}
 
 					//Create and insert field
@@ -504,7 +646,7 @@ sap.ui.define([
 			var picturesCount = this.publImg["pictures"].length,
 				selectArray = [];
 
-			selectArray.push({"key": 0, "text": ""}) ;
+			selectArray.push({"key": 0, "text": ""});
 
 			for (var i = 0; i < picturesCount; i++) {
 				selectArray.push({"key": i+1, "text": (i+1).toString()});

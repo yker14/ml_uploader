@@ -190,9 +190,12 @@
             "dbName" : "category",
             "label": "Categoría",
             "editable" : "false",
-            "type" : "text",
+            "type" : "button",
             "format" : "text",
-            "items" : null
+            "items" : null,
+            "config" : {
+                "onPress" : "onCategoryPress"
+            }
         }
     }
 }
