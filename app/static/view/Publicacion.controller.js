@@ -133,10 +133,9 @@ sap.ui.define([
 		},
 
 
-		messageStripTypeFormat: function(val) {
+		messageStripTypeFormatML: function(val) {
 			
-
-			switch (val.as_status_id) {
+			switch (val.ml_status_id) {
 				// paused publ
 				case 11:
 					return "Warning"
@@ -161,13 +160,37 @@ sap.ui.define([
 				case 1002:
 					return "Error"
 
+				// long time out of stock
+				case 1003:
+					return "Warning"
+
 				default:
 					return "None"
 			}
 		},
 
-		messageStripTextFormat: function(val) {
-			return val.as_status_id;
+		messageStripTypeFormatAS: function(val) {
+			
+			switch (val.as_status_id) {
+				// included in AutoStocking
+				case 1:
+					return "Success"
+
+				// excluded from AutoStocking
+				case 2:				
+					return "Error"
+
+				// long time without stock
+				case 3:
+					return "Warning"
+
+				// pending
+				case 4:
+					return "Information"
+
+				default:
+					return "None"
+			}
 		},
 
 		handlePublishPress: function() {

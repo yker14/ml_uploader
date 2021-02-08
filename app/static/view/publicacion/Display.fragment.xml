@@ -4,10 +4,14 @@
 	xmlns:f="sap.ui.layout.form"
 	xmlns:core="sap.ui.core">
 	<VBox class="sapUiSmallMargin">
-		<MessageStrip id="messageStrip1"
+		<MessageStrip id="messageStripML1"
 			showIcon="true" 
-			type="{path:'/status', formatter: '.messageStripTypeFormat'}"
-			text="{path:'/status/status'}" />
+			type="{path:'/status', formatter: '.messageStripTypeFormatML'}"
+			text="MercadoLibre: {path:'/status/ml_status'}" />
+		<MessageStrip id="messageStripAS1"
+			showIcon="true" 
+			type="{path:'/status', formatter: '.messageStripTypeFormatAS'}"
+			text="AutoStock: {path:'/status/as_status'}" />
 
 		<f:SimpleForm id="display_simpleformPublData"
 			editable="false"
