@@ -210,6 +210,12 @@ def pause(publ_id):
     # Data modelo
     return ('ID {} pausado'.format(publ_id),200)
 
+@app.route('/publicaciones/<publ_id>/catupdate/<category>', methods=['POST'])
+def category_update(publ_id, category):
+
+    # Data modelo
+    return ('Actualizado a {}'.format(category),200)
+
 @app.route('/mlloggedid', methods=['GET'])
 def getLogin():
     

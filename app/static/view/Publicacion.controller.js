@@ -461,7 +461,7 @@ sap.ui.define([
 				this.formController.addContent(oLabel);
 
 				if (data.type == "button") {
-					let oButton = new sap.m.Button({text:this.getView().getModel().getProperty("/")[data.dbName], press: this.getView().getController()[data.config.onPress].bind(this)});				
+					let oButton = new sap.m.Button(data.dbName+"Button", {text:this.getView().getModel().getProperty("/")[data.dbName], press: this.getView().getController()[data.config.onPress].bind(this)});				
 					this.formController.addContent(oButton);
 				}
 				else {					
@@ -477,7 +477,9 @@ sap.ui.define([
 			
 			Promise.all([tempMLCategories, tempModel, ev.hasOwnProperty("skipReCreation")]).then(function(values) {
 				let MLCategories = values[0],
-				oModel = values[1];
+				oModel = values[1],
+				skipReCreation = values[2];
+
 				this.currentCategoryPath = [];
 				
 				console.log(MLCategories);		
@@ -502,21 +504,28 @@ sap.ui.define([
 					
 					this.oCategoryDialog = new Dialog({
 						title: "Categorias",
-						contentWidth: "40%",
-						contentHeight: "30%",
-						endButton: new sap.m.Button({
-							text: "Cerrar",
-							press: function () {
-								this.oCategoryDialog.close();
-							}.bind(this)
-						}),
-						beginButton: new sap.m.Button({
-							visible: false,
-							text: "Atras",
-							press: this.goPrevCategory.bind(this)
-						})
-					});
-					
+						contentWidth: "90%",
+						contentHeight: "50%",
+						buttons: [
+							new sap.m.Button("catBack", {
+								visible: false,
+								text: "Atras",
+								press: this.goPrevCategory.bind(this)
+							}),
+							new sap.m.Button("catClose", {
+								text: "Cerrar",
+								press: function () {
+									this.oCategoryDialog.getSubHeader().destroyContent()
+									this.oCategoryDialog.close();
+								}.bind(this)
+							}),
+							new sap.m.Button("catSave", {
+								text: "Guardar Categoria", 
+								press: this.onSaveCategoryPress.bind(this), 
+								enabled: false
+							})]
+						});
+
 					//to get access to the controller's model
 					this.getView().addDependent(this.oCategoryDialog);
 					this.oCategoryDialog.addContent(categoryList);
@@ -526,12 +535,25 @@ sap.ui.define([
 					this.oCategoryDialog.destroyContent();
 					this.oCategoryDialog.addContent(categoryList);
 
-					if (!values[2]) {
+					if (!skipReCreation) {
 						this.oCategoryDialog.open();	
 					}
 
-					this.oCategoryDialog.getBeginButton().setVisible(false);
+					sap.ui.getCore().byId("catBack").setVisible(false);
 				}
+			}.bind(this));
+		},
+
+		onSaveCategoryPress :function(ev) {
+			console.log("save cat");
+			let selectedCat = this.currentCategoryPath[this.currentCategoryPath.length-1];
+			var resp = HttpRequestor.httpSubmitData('/publicaciones/'+this.publicId+'/catupdate/'+selectedCat.id, "POST", null, {catId: "MCO"});
+
+			resp.then(function(val) {
+				this.viewData.category = JSON.stringify(selectedCat);
+				sap.ui.getCore().byId("categoryButton").setText(this.viewData.category);
+				console.log(this.viewData);
+				sap.m.MessageBox.success("Categoria actualizada.\n"+resp.responseText);
 			}.bind(this));
 		},
 
@@ -543,15 +565,23 @@ sap.ui.define([
 				if (this.currentCategoryPath.length > 1) {
 					this.onSelectCategory({"category": val.path_from_root[val.path_from_root.length - 2].id});
 				} else {
+					this.oCategoryDialog.getSubHeader().destroyContent();
 					this.onCategoryPress({"skipReCreation": true});
 				}
 			}.bind(this))
 		},
 
 		onSelectCategory : function (ev) {
+			// When articially called
 			if (ev.hasOwnProperty("category")) {
 				this.currentCategory = ev.category;
-			} else {
+			} 
+			// When called from Breadcrumbs
+			else if (ev.getSource().getTooltip()) {
+				this.currentCategory = ev.getSource().getTooltip();
+			}
+			// When naturally called from Category list select
+			else {
 				this.currentCategory = ev.getSource().getInfo();
 			}
 			
@@ -562,13 +592,12 @@ sap.ui.define([
 			Promise.all([tempMLCategories, tempModel]).then(function (val) {
 				let childCategoryInfo = val[0];		
 				this.currentCategoryPath = val[0].path_from_root;		
-				let childCategories = childCategoryInfo.children_categories;
+				let categoryModelData = childCategoryInfo.children_categories;
 				let oModel = val[1];				
 				let categoryList = null;
+				let categoryContent = new sap.m.VBox();
 
-				oModel.setData(childCategories);
-
-				if (childCategories.length > 0) {
+				if (categoryModelData.length > 0) {
 					categoryList = new sap.m.List({
 						items: {
 							path: "/",
@@ -580,7 +609,31 @@ sap.ui.define([
 							})
 						}
 					});
+
+					categoryContent.addItem(categoryList);
+					sap.ui.getCore().byId("catSave").setEnabled(false);
+
 				} else {
+					// If children categories is empty show data of current cat
+					categoryModelData = [];
+
+					// Control for title					
+					let categoryTitle = new sap.m.Title({
+						text: "Configuraciones de la categoria \"" + this.currentCategoryPath[this.currentCategoryPath.length-1].name + "\" (" +this.currentCategoryPath[this.currentCategoryPath.length-1].id+")",
+						titleStyle: "H2",
+						textAlign: "Center"
+					});
+
+					categoryTitle.addStyleClass("sapUiSmallMarginTopBottom sapUiSmallMarginBeginEnd");
+
+					for (var key in childCategoryInfo.settings) {
+
+						let keyValue = childCategoryInfo.settings[key];
+
+						let info = {name: key, id: keyValue};
+						categoryModelData.push(info);
+					}
+
 					categoryList = new sap.m.List({
 						items: {
 							path: "/",
@@ -591,20 +644,68 @@ sap.ui.define([
 								press: this.onSelectCategory.bind(this)
 							})
 						}
-					});					
+					});	
+					
+					categoryContent.addItem(categoryTitle);
+					categoryContent.addItem(categoryList);
+					sap.ui.getCore().byId("catSave").setEnabled(true);
 				}
-
+				
+				oModel.setData(categoryModelData);
 				categoryList.setModel(oModel);
 				this.oCategoryDialog.destroyContent();
-				this.oCategoryDialog.addContent(categoryList);	
-				
-				this.oCategoryDialog.getBeginButton().setVisible(true);
+				this.oCategoryDialog.addContent(categoryContent);	
+				sap.ui.getCore().byId("catBack").setVisible(true);
+
+				// Add path from root in sub header
+				// Links for breadcrumbs
+				let linksForBC = [];
+
+				// Create a links for all but current location
+				let enabled = true;
+				for (var i=0; i < this.currentCategoryPath.length; i++) {					
+					enabled = (this.currentCategoryPath.length-1 == i) ? false : true;
+
+					// Destroy previous button created to free the id
+					let bId = "breadcrumbCat"+i;
+					if (sap.ui.getCore().byId(bId)) {
+						sap.ui.getCore().byId(bId).destroy();
+					}
+
+					// Create new button
+					linksForBC.push(new sap.m.Button(bId, {
+						enabled: enabled,
+						press: this.onSelectCategory.bind(this), 
+						text: this.currentCategoryPath[i].name, 
+						tooltip: this.currentCategoryPath[i].id,
+						type: "Ghost"
+					}));
+
+					if (enabled) {
+
+					};
+				}
+
+				// Add current category without
+
+				// Create breadcrumbs
+				let breadcrumbs = new sap.m.HBox({items: linksForBC});
+
+				let subHeaderToolbar = new sap.m.Toolbar({
+					content: new sap.m.HBox({items: breadcrumbs, fitContainer: true, alignContent: "End"})
+				});
+
+				this.oCategoryDialog.destroySubHeader();
+				this.oCategoryDialog.setSubHeader(subHeaderToolbar);
+
 
 			}.bind(this));
 
 			// Clean tempVars data
 			this.tempVars = {};
 		},
+
+
 
 		_setPublicationData : function () {
 			this.formController = this.getFormControl();
