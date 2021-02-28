@@ -13,8 +13,8 @@
 				<contentRight>
 					<Button id="edit" text="Editar" press="handleEditPress" />
 					<Button id="stock" text="Actualizar Stock" visible="true" press="handleStockUpdatePress" />
-					<Button id="publish" text="Publicar en MercadoLibre" press="handlePublishPress" />
-					<Button id="del" text="Borrar Publicacion" press="handleDeletePress" />
+					<Button id="publish" text="Publicar" press="handlePublishPress" />
+					<Button id="del" text="Finalizar publicacion" press="handleDeletePress" />
 
 					<Button id="manualStop" text="Pausar Publicacion" visible="true" press="handlePausePress" />
 					<Button id="manualPublish" text="Excluir del AutoStock" visible="true" press="handleManualPublishPress" />

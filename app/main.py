@@ -83,7 +83,8 @@ def page(publ_id):
 @app.route('/publicaciones/<publ_id>/delete', methods=['POST'])
 def delete(publ_id):
     
-    return ('ID {} has been deleted'.format(publ_id),200)
+    #return ('ID {} has been deleted'.format(publ_id),200)
+    return ('Exitoso', 200)
 
 
 @app.route('/publicaciones/<publ_id>/update', methods=['POST'])

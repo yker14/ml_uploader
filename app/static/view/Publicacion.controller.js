@@ -198,7 +198,14 @@ sap.ui.define([
 			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/publicar', "POST", null);
 	
 			resp.then(function() {
-				sap.m.MessageBox.success("Publicacion en MercadoLibre exitoso.\n"+resp.responseText);
+				sap.m.MessageBox.success("Publicacion en MercadoLibre exitoso.\n"+resp.responseText, {
+					actions: [sap.m.MessageBox.Action.CLOSE],
+					emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+					onClose: function () {
+						//this.handleBackPress();
+						location.reload();
+					}
+				});
 
 			});
 		},
@@ -208,7 +215,14 @@ sap.ui.define([
 			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/sync', "POST", null);
 	
 			resp.then(function() {
-				sap.m.MessageBox.success("Inventario actualizado.\n"+resp.responseText);
+				sap.m.MessageBox.success("Inventario actualizado.\n"+resp.responseText, {
+					actions: [sap.m.MessageBox.Action.CLOSE],
+					emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+					onClose: function () {
+						//this.handleBackPress();
+						location.reload();
+					}
+				});
 
 			});
 		},
@@ -218,7 +232,14 @@ sap.ui.define([
 			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/pause', "POST", null);
 	
 			resp.then(function() {
-				sap.m.MessageBox.success("Pausado en MercadoLibre exitoso.\n"+resp.responseText);
+				sap.m.MessageBox.success("Pausado en MercadoLibre exitoso.\n"+resp.responseText, {
+					actions: [sap.m.MessageBox.Action.CLOSE],
+					emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+					onClose: function () {
+						//this.handleBackPress();
+						location.reload();
+					}
+				})
 
 			});
 		},
@@ -228,7 +249,14 @@ sap.ui.define([
 			var resp = HttpRequestor.httpRequest('/publicaciones/'+publId+'/manual', "POST", null);
 	
 			resp.then(function() {
-				sap.m.MessageBox.success("Publicacion en modo manual.\n"+resp.responseText);
+				sap.m.MessageBox.success("Publicacion en modo manual.\n"+resp.responseText, {
+					actions: [sap.m.MessageBox.Action.CLOSE],
+					emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+					onClose: function () {
+						//this.handleBackPress();
+						location.reload();
+					}
+				});
 
 			});
 		},
@@ -253,15 +281,21 @@ sap.ui.define([
 		handleDeletePress: function () {
 			var publId = this.publicId;
 
-			sap.m.MessageBox.warning("Se eliminara esta publicacion de la base de datos y de Mercadolibre. ¿Desea continuar?", {
+			sap.m.MessageBox.warning("Se finalizara esta publicacion en Mercadolibre. ¿Desea continuar?", {
 				actions: ["Aceptar", sap.m.MessageBox.Action.CLOSE],
 				emphasizedAction: sap.m.MessageBox.Action.CLOSE,
 				onClose: function (oAction) {
 						if (oAction=="Aceptar") {
 							var resp = HttpRequestor.httpRequest(`/publicaciones/${publId}/delete`,"POST");
 								resp.then(function () {
-									sap.m.MessageBox.success("La publicacion fue eliminada.\n"+resp.responseText);
-									this.handleBackPress();
+									sap.m.MessageBox.success("La publicacion fue finalizada.\n"+resp.responseText, {
+										actions: [sap.m.MessageBox.Action.CLOSE],
+										emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+										onClose: function () {
+											//this.handleBackPress();
+											location.reload();
+										}
+									});
 								}.bind(this))
 						}
 					}.bind(this)
@@ -576,7 +610,14 @@ sap.ui.define([
 				this.viewData.category = JSON.stringify(selectedCat);
 				sap.ui.getCore().byId("categoryButton").setText(this.viewData.category);
 				console.log(this.viewData);
-				sap.m.MessageBox.success("Categoria actualizada.\n"+resp.responseText);
+				sap.m.MessageBox.success("Categoria actualizada.\n"+resp.responseText, {
+					actions: [sap.m.MessageBox.Action.CLOSE],
+					emphasizedAction: sap.m.MessageBox.Action.CLOSE,
+					onClose: function () {
+						//this.handleBackPress();
+						location.reload();
+					}
+				});
 			}.bind(this));
 		},
 

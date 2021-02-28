@@ -23,7 +23,7 @@ sap.ui.define([
                 },
 
                 error: function(error) {
-                    sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+                    sap.m.MessageBox.error("Ocurrio un error.\n"+JSON.stringify(error), {
                         actions: ["OK", sap.m.MessageBox.Action.CLOSE],
                         emphasizedAction: "OK"
                     });
@@ -52,7 +52,7 @@ sap.ui.define([
                 },
 
                 error: function(error) {
-                    sap.m.MessageBox.warning("Ocurrio un error de conexion.\n"+JSON.stringify(error), {
+                    sap.m.MessageBox.error("Ocurrio un error.\n"+JSON.stringify(error), {
                         actions: ["OK", sap.m.MessageBox.Action.CLOSE],
                         emphasizedAction: "OK"
                     });
