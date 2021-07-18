@@ -1,0 +1,145 @@
+{ "1": [
+
+    {"MANUFACTURING_TIME": null,
+    "field_name": "Disponibilidad de stock",
+    "field_type": "array",
+     "list_content": [
+        "1 días",
+        "2 días",
+        "3 días",
+        "4 días",
+        "5 días",
+        "6 días",
+        "7 días",
+        "8 días",
+        "9 días",
+        "10 días",
+        "11 días",
+        "12 días",
+        "13 días",
+        "14 días",
+        "15 días",
+        "16 días",
+        "17 días",
+        "18 días",
+        "19 días",
+        "20 días",
+        "21 días",
+        "22 días",
+        "23 días",
+        "24 días",
+        "25 días",
+        "26 días",
+        "27 días",
+        "28 días",
+        "29 días",
+        "30 días"
+        ]
+    },
+        
+    {"WARRANTY_TIME": "30 días",
+    "field_name": "Tiempo de garantía",
+    "field_type": "String compuesto [numeric input, array]",
+    "list_content": [
+        "días",
+        "meses",
+        "años"
+    ],
+    "description": "string compuesto/concatenado por el numero que coloque el usuario y un item del array"},
+
+    {"WARRANTY_TYPE": "Garantía del vendedor",
+    "field_name": "Tipo de garantía",
+    "field_type": "array",
+    "list_content": [
+        "Garantía del vendedor",
+        "Garantía de fábrica",
+        "Sin garantía"
+        ]
+    },
+
+    {"description_footer": "Este es texto que ira al pie de la descripción",
+    "field_name": "Pie de descripción",
+    "field_type": "input text",
+    "description": "igual que la descripcion, un texto largo que pueda ser editado"
+    },
+
+    {"description_header": "Este es texto que ira en el encabezadi de la descripción",
+    "field_name": "Encabezado de descripción",
+    "field_type": "input text",
+    "description": "igual que la descripcion, un texto largo que pueda ser editado"
+    },
+
+    {"listing_type_ml_id": "Premium",
+    "field_name": "Tipo de listado",
+    "field_type": "array",
+    "list_content": [
+        "Clásica",
+        "Premium"
+        ]
+    },
+
+    {"only_available": 1,
+    "field_name": "Solo disponible en tiendas",
+    "field_type": "boolean",
+    "description": "me puedes retornar un yes/no, 1/0, true/false."
+    },
+
+    {"only_me2": 1,
+    "field_name": "Solo MercadoEnvíos",
+    "field_type": "boolean",
+    "description": "me puedes retornar un yes/no, 1/0, true/false."
+    },
+
+    {"proft_rate": 35,
+    "field_name": "Porcentaje de ganancia",
+    "field_type": "numeric input (integer)"
+    },
+
+    {"selected_stores": ["Bogotá, Cedritos", "Bogotá, Calle 170"],
+    "field_name": "Tiendas seleccionadas",
+    "field_type": "Una lista conformada por las tiendas que seleccione el usuario",
+    "list_content": [
+        "Armenia",
+        "Barranquilla Centro",
+        "Barranquilla Norte",
+        "BarranquillaCalle 30",
+        "Bello",
+        "Bogotá Tintal",
+        "Bogotá, Av. 68 sur",
+        "Bogotá, Calle 170",
+        "Bogotá, Calle 26",
+        "Bogotá, Calle 80",
+        "Bogotá, Cedritos",
+        "Bogotá, MallPlaza",
+        "Bogotá, Suba",
+        "Bucaramanga, La Rosita",
+        "Cajicá",
+        "Cali C.C Jardín Plaza",
+        "Cali Norte",
+        "Cartagena La Popa",
+        "Cartagena San Fernando",
+        "Cúcuta",
+        "Girardot",
+        "Ibagué",
+        "Manizales, San Rafael",
+        "Medellín C.C. Molinos",
+        "Medellín, Envigado",
+        "Medellín, Industriales",
+        "Medellín, San Juan",
+        "Montería, El Recreo",
+        "Mosquera",
+        "Neiva, San Pedro",
+        "Palmira, Unicentro",
+        "Pereira",
+        "Rionegro",
+        "Santa Marta C.C. Buenavista",
+        "Soacha, C.C. Mercurio",
+        "Tulua",
+        "Tunja",
+        "Valledupar Guatapurí",
+        "Villavicencio Fundadores",
+        "Yopal"
+        ]   
+    }
+    ]
+}

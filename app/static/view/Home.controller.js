@@ -9,6 +9,9 @@ sap.ui.define([
 	"use strict";
 
 	var CController = Controller.extend("rshub.ui.controller.Home", {
+		
+		storeUserConfig: null,
+		
 		onInit : function() {
 
 			var routeName = this.getOwnerComponent().getCurrentRoute();
@@ -26,7 +29,10 @@ sap.ui.define([
 		},
 
 		_onRouteMatched: function() {
-
+			let oStoreUsrConfig =  new JSONModel();
+			oStoreUsrConfig.loadData(sap.ui.require.toUrl("rshub/ui/model/") + "storesettings.json", null, false);
+			
+			this.storeUserConfig = oStoreUsrConfig.getData(); 
 		},
 		
 		onURLSave : function(ev) {
@@ -99,7 +105,7 @@ sap.ui.define([
 
 				}.bind(this)
 			})
-		}
+		},
 /*
 		scrapSelectedInit : function() {
 
@@ -149,6 +155,51 @@ sap.ui.define([
 			}
 		}
 */
+
+	onConfigPress: function() {
+
+		if (!this.oSettingDialog) {
+					
+			this.oSettingDialog = new Dialog({
+				title: "Categorias",
+				contentWidth: "90%",
+				contentHeight: "50%",
+				buttons: [
+					new sap.m.Button("settingSave", {
+						enabled: false,
+						text: "Guardar",
+						press: this.goPrevCategory.bind(this)
+					}),
+					new sap.m.Button("catClose", {
+						text: "Cerrar",
+						press: function () {
+							this.oSettingDialogs.getSubHeader().destroyContent()
+							this.oSettingDialog.close();
+						}.bind(this)
+					}),
+					new sap.m.Button("catSave", {
+						text: "Guardar Categoria", 
+						press: this.onSaveCategoryPress.bind(this), 
+						enabled: false
+					})]
+				});
+
+			//to get access to the controller's model
+			this.getView().addDependent(this.oSettingDialog);
+			this.oSettingDialog.addContent(categoryList);
+			this.oSettingDialog.open();
+		} else {
+
+			this.oSettingDialog.destroyContent();
+			this.oSettingDialog.addContent(categoryList);
+
+			if (!skipReCreation) {
+				this.oSettingDialog.open();	
+			}
+
+			sap.ui.getCore().byId("catBack").setVisible(false);
+		}
+	}
 
 	});
 

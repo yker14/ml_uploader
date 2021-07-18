@@ -229,5 +229,37 @@ def logoutUser():
     data = {"message":"User Logged Out"}
     return (json.dumps(data),200)
 
+@app.route('/userconf/<store>', methods=['GET'])
+def userconf():
+
+    data = {
+        "homecenter_user_config": {
+            "MANUFACTURING_TIME": None,
+            "WARRANTY_TIME": "30 días",
+            "WARRANTY_TYPE": "Garantía del vendedor",
+            "description_footer": "Este es texto que ira al pie de la descripción",
+            "description_header": "Este es texto que ira en el encabezado de la descripción",
+            "listing_type_ml_id": "Premium",
+            "only_available": 1,
+            "only_me2": 1,
+            "proft_rate": 35,
+            "selected_stores": ["Bogotá, Cedritos"],
+            "users_id": 8
+        }
+    }
+    
+    return (json.dumps(data),200)
+
+@app.route('/userconfupdate/<store>', methods=['GET'])
+def userconfupdate():
+
+    try:
+        data = {}
+        return ('Successfully published', 200)
+
+    except Exception as e:
+        return ('A problem occurred while processing the request. \n Error Message: {}'.format(e.args), 400)
+
+
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=True)

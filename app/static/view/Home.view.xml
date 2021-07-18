@@ -38,6 +38,10 @@
           						<m:Title id="title" text="URLs Agregadas"/>
           						<m:ToolbarSpacer/>
 
+                      <m:Button	icon="sap-icon://action-settings"
+          							        tooltip="Cambiar configuraciones"
+          							        press="onConfigPress"/>
+
                       <m:Button	icon="sap-icon://begin"
           							        tooltip="Scrap All"
           							        press="scrapAllInit"/>
